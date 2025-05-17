@@ -1,0 +1,47 @@
+<div class="flex flex-wrap justify-center items-center sm:gap-2">
+  <select
+    id="pageSizes"
+    class="p-2 rounded-md"
+    (change)="setPageSize($event)"
+    class="bg-white p-1 border border-black rounded-md"
+  >
+    @for (item of pageSizes; track $index) {
+    <option value="{{ item }}" [selected]="pageSize === item">
+      {{ item }}
+    </option>
+    }
+  </select>
+  <div class="sm:p-3 p-2 text-center">
+    <span
+      >{{ pagination.start_page_count }}&nbsp;-&nbsp;{{
+        pagination.end_page_count
+      }}&nbsp;of&nbsp;{{ pagination.total_rows }}
+    </span>
+  </div>
+  <div class="sm:p-3 p-2 flex gap-2 items-center justify-center">
+    <app-button
+      [type]="'button'"
+      [class]="
+        'disabled:bg-quinary bg-quaternary px-2 py-1 rounded-md text-secondary'
+      "
+      [disabled]="page <= 0"
+      (click)="decrementPageCount()"
+    >
+      &LeftArrowBar;
+    </app-button>
+    <span>
+      {{ pagination.page }}&nbsp;&nbsp;of&nbsp;&nbsp;
+      {{ pagination.total_pages }}
+    </span>
+    <app-button
+      [type]="'button'"
+      [class]="
+        'disabled:bg-quinary bg-quaternary px-2 py-1 rounded-md text-secondary'
+      "
+      [disabled]="page >= pagination.total_pages"
+      (click)="incrementPageCount()"
+    >
+      &RightArrowBar;
+    </app-button>
+  </div>
+</div>

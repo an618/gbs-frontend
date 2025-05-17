@@ -1,0 +1,23 @@
+<div class="w-full h-dvh min-h-[40rem] flex justify-center items-center">
+  <div
+    class="w-1/2 lg:flex flex-col justify-center items-center hidden bg-secondary h-full"
+  >
+    <div class="text-4xl text-white font-light text-center">
+      <img
+        src="assets/images/loginLeftSideImg.svg"
+        i18n-alt="@@LoginLeftSideImg"
+        alt="LoginLeftSideImg"
+      />
+      <br />
+      <p i18n="@@PersonalisedWealth">Your personalised wealth</p>
+      <p i18n="@@MangementTool">management tool</p>
+    </div>
+    <br />
+    <p class="text-3xl text-white" i18n="@@StartJourneyDescription">
+      Start your journey with us today
+    </p>
+  </div>
+  <div class="lg:w-1/2 w-full">
+    <router-outlet></router-outlet>
+  </div>
+</div>

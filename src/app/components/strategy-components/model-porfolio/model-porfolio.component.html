@@ -1,0 +1,46 @@
+@if(loaderService.getLoaderValue()){
+<div class="flex justify-center items-center h-96 w-full">
+  <app-loader class="h-12 w-12" />
+</div>
+}@else{
+
+<div class="w-full p-2 sm:flex flex-col items-center mt-2">
+  <h3 class="sm:text-3xl text-xl sm:font-extrabold font-bold w-full">
+    {{ strategyModelPorfolio.name }}
+  </h3>
+  <div class="sm:w-[30rem] w-auto sm:h-[26rem] h-auto">
+    <app-double-doughnut-chart
+      [doubleDoughnutChartConfig]="
+        this.chart('recommendedPortfolio_' + strategyModelPorfolio.name)
+      "
+      [doubleDoughnutChartLabels]="
+        'recommendedPortfolio_' + strategyModelPorfolio.name
+      "
+    />
+  </div>
+  <div class="grid xl:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 w-full">
+    @for (modelPortfolio of strategyModelPorfolio.modelPortfolios; track $index
+    ) {
+    <div>
+      <h3 class="text-primary lg:text-lg sm:text-base text-sm font-bold mb-2">
+        {{ modelPortfolio?.assetClassName }}&nbsp; - &nbsp;
+        <span class="text-tertiary lg:text-base text-sm font-bold mb-2">
+          {{ modelPortfolio?.assetClassAllocationPercentage }}
+        </span>
+      </h3>
+      <ol class="text-primary lg:text-base text-xs flex flex-col gap-4">
+        @for (constitutes of modelPortfolio?.constitutes; track $index) {
+        <li class="flex items-start gap-2">
+          <span class="bg-secondary sm:px-2 px-1 text-white rounded-md">{{
+            $index + 1
+          }}</span
+          ><span>{{ constitutes?.assetName }}</span>
+        </li>
+        }
+      </ol>
+    </div>
+    }
+  </div>
+</div>
+
+}

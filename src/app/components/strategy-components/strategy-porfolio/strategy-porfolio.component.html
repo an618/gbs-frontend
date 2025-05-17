@@ -1,0 +1,31 @@
+@if(loaderService.getLoaderValue()){
+<div class="flex justify-center items-center h-96 w-full">
+  <app-loader class="h-12 w-12" />
+</div>
+}@else{
+<div class="flex flex-col justify-center items-center">
+  <div class="lg:w-3/4 sm:w-11/12 w-full">
+    <app-model-porfolio [strategyModelPorfolio]="singlestrategyModelPorfolio" />
+    <div
+      class="flex sm:justify-between justify-center items-center sm:my-2 my-4 w-full p-2"
+    >
+      <app-button
+        [text]="constantService.textForBack | translate"
+        [type]="'button'"
+        (click)="goBackStrategy()"
+        [class]="
+          'border border-error rounded-md sm:px-6 p-2 text-error font-bold sm:w-auto w-full sm:flex hidden'
+        "
+      />
+      <app-button
+        (click)="proceed()"
+        [text]="constantService.textForProceed | translate"
+        [type]="'button'"
+        [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+        class="sm:w-auto w-full"
+      />
+    </div>
+  </div>
+</div>
+
+}

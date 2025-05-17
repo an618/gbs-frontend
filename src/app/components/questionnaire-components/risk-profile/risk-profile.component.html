@@ -1,0 +1,83 @@
+<div class="w-full flex h-full sm:flex-row flex-col sm:justify-between">
+  @if(loaderService.getLoaderValue()){
+  <div class="flex justify-center items-center h-96 w-full">
+    <app-loader class="h-12 w-12" />
+  </div>
+  }@else{
+  <form
+    (ngSubmit)="onSubmit($event)"
+    [formGroup]="riskProfileForm"
+    class="flex flex-col sm:justify-around justify-between sm:items-center items-start p-2 xl:w-4/5 sm:w-3/4 w-full"
+  >
+    <div
+      class="xl:w-1/2 lg:w-3/4 w-full h-full flex flex-col justify-around gap-4"
+    >
+      <div class="flex flex-col gap-4">
+        @for (item of questionnaireTemplateRiskProfile; track $index) { @if
+        (questionCount === $index+1) {
+        <h3 class="text-sm font-bold text-lightRed" i18n="@@QuestionCount">
+          QUESTION {{ item.order }} OF
+          {{ questionnaireTemplateRiskProfile.length }}
+        </h3>
+        <app-questionnaire-option-based
+          [h3Class]="'sm:text-xl text-lg font-extrabold text-primary'"
+          [divClass]="'flex flex-col gap-4 py-2'"
+          [questionId]="item.questionId"
+          [count]="count"
+          [questionnaire]="item.questionText"
+          [questionnairesOptions]="item.answers"
+          (selectedOption)="setSelectedOption($event)"
+        />
+        } }
+      </div>
+      <div class="flex sm:justify-between w-full">
+        @if (questionCount !==1) {
+        <app-button
+          [text]="constantService.textForBack | translate"
+          (click)="backQuestion()"
+          [type]="'button'"
+          [class]="
+            'border border-error rounded-md text-error sm:px-6 p-2 font-bold sm:w-auto w-full sm:block hidden'
+          "
+        />
+        }@else{
+        <span></span>
+        }
+
+        <div class="flex gap-2 sm:w-auto w-full">
+          <app-button
+            [text]="constantService.textForSkip | translate"
+            (click)="skipQuestion()"
+            [type]="'button'"
+            [class]="
+              'sm:px-6 p-2 border border-error rounded-md text-error font-bold'
+            "
+            class="sm:w-auto w-full"
+          />
+          <app-button
+            [text]="
+              questionCount === 8
+                ? (constantService.textForCheckSore | translate)
+                : (constantService.textForContiue | translate)
+            "
+            [type]="'submit'"
+            [class]="
+              'bg-error sm:px-6 p-2 rounded-md text-white font-bold sm:w-auto w-full'
+            "
+            class="sm:w-auto w-full"
+            [ngClass]="{ 'bg-tertiary': !riskProfileForm.valid }"
+            [disabled]="!riskProfileForm.valid"
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+  }
+
+  <div class="xl:w-1/5 sm:w-1/3 w-full sm:p-0 p-2">
+    @for (item of questionnaireTemplateRiskProfile; track $index) { @if
+    (questionCount === item.screenOrder) {
+    <app-questionnaire-means [description]="item.description" />
+    } }
+  </div>
+</div>

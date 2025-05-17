@@ -1,0 +1,77 @@
+<form
+  *ngIf="!goalSet"
+  (submit)="onSubmit($event)"
+  class="w-full sm:h-[40rem] h-[80dvh] min-h-96 flex flex-col items-center sm:gap-4 p-4"
+>
+  <div class="h-full flex flex-col sm:justify-evenly sm:gap-8 gap-4">
+    <h2
+      class="sm:text-4xl text-lg sm:font-medium font-extrabold text-primary text-center"
+      i18n="@@WhatLikeToday"
+    >
+      {{ "WhatLikeToday" | translate }}
+    </h2>
+    <div class="flex gap-6 justify-center w-full">
+      <app-button
+        [type]="'button'"
+        [class]="
+          'relative border border-error rounded-sm sm:p-6 p-4 sm:h-64 sm:w-56 flex flex-col justify-center items-center gap-4 w-full'
+        "
+        [ngClass]="{ 'border-quaternary': goalType !== 'new' }"
+        (click)="setGoalType('new')"
+      >
+        <img
+          src="assets/icons/newGoalIcon.svg"
+          alt="new-goal-icon"
+          i18n-alt="@@NewGoalIcon"
+        />
+        <h3
+          class="text-primary sm:text-2xl text-xl max-[320px]:text-base sm:font-extrabold font-bold"
+          i18n="@@NewGoal"
+        >
+          {{ "NewGoal" | translate }}
+        </h3>
+        <span
+          class="absolute sm:p-2 p-1 sm:py-2.5 py-1.5 bg-error rounded-sm top-0 right-0"
+          *ngIf="goalType === 'new'"
+        >
+          <app-tick />
+        </span>
+      </app-button>
+      <app-button
+        [type]="'button'"
+        [class]="
+          'relative border border-error rounded-sm sm:p-6 p-4 sm:h-64 sm:w-56 flex flex-col justify-center items-center gap-4 w-full disabled:cursor-not-allowed disabled:opacity-50'
+        "
+        [ngClass]="{ 'border-quaternary': goalType !== 'pending' }"
+        (click)="setGoalType('pending')"
+        [disabled]="checkStatus"
+      >
+        <img
+          src="assets/icons/revisedGoalIcon.svg"
+          alt="new-goal-icon"
+          i18n-alt="@@NewGoalIcon"
+        />
+        <h3
+          class="text-primary sm:text-2xl text-xl max-[320px]:text-base sm:font-extrabold font-bold"
+          i18n="@@PendingGoal"
+        >
+          {{ "PendingGoal" | translate }}
+        </h3>
+        <span
+          class="absolute sm:p-2 p-1 sm:py-2.5 py-1.5 bg-error rounded-sm top-0 right-0"
+          *ngIf="goalType === 'pending'"
+        >
+          <app-tick />
+        </span>
+      </app-button>
+    </div>
+  </div>
+  <app-button
+    [text]="constantService.textForContiue | translate"
+    [type]="'submit'"
+    [class]="'bg-error sm:px-6 p-2 rounded-md text-white font-bold'"
+    [ngClass]="{ 'bg-tertiary': !goalType }"
+    [disabled]="!goalType"
+    class="sm:w-auto w-full"
+  />
+</form>

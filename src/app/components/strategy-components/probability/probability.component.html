@@ -1,0 +1,28 @@
+<div class="flex flex-col gap-4 justify-center items-center mt-6">
+  <div class="xl:3/4 lg:w-4/5 w-full">
+    <app-line-chart
+      [lineChartLabels]="'probability'"
+      [lineChartConfig]="probability"
+    />
+  </div>
+
+  <div class="xl:3/4 lg:w-4/5 w-full flex justify-between items-center">
+    <app-button
+      (click)="goBack()"
+      [text]="constantService.textForBack | translate"
+      [type]="'button'"
+      [class]="
+        'border border-error text-base font-bold text-error rounded-md p-2 px-6 sm:block hidden'
+      "
+    />
+    <app-button
+      (click)="proceed()"
+      [text]="constantService.textForProceed | translate"
+      [type]="'button'"
+      [class]="
+        'bg-error text-base font-bold text-white rounded-md p-2 px-6 my-2'
+      "
+      class="sm:w-auto w-full"
+    />
+  </div>
+</div>

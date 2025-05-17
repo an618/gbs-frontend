@@ -1,0 +1,7 @@
+<button [class]="class" [ngClass]="ngClass" [type]="type" [disabled]="disabled">
+  @if (text === "") {
+    <ng-content></ng-content>
+  } @else {
+    {{ text }}
+  }
+</button>

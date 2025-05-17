@@ -1,0 +1,27 @@
+<div class="w-full flex flex-col gap-2">
+  @if (questionnaire) {
+  <h3 [class]="h3Class">{{ questionnaire }}</h3>
+  }
+  <div [class]="divClass">
+    @for (item of questionnairesOptions; track item.order) {
+    <div class="flex gap-2 items-center bg-white rounded-md p-1">
+      <input
+        type="radio"
+        id="{{ item.answerId }}"
+        value="{{ item.answerText }}"
+        name="{{ sanitizeKey(questionnaire) }}"
+        accept="{{ item.questionId }}"
+        [checked]="item.answerId === selectedAnswer"
+        (change)="setSelectedOption($event)"
+        autocapitalize="on"
+      />
+      <label
+        for="{{ item.answerId }}"
+        class="text-primary sm:text-base text-sm font-medium"
+      >
+        {{ item.answerText }}
+      </label>
+    </div>
+    }
+  </div>
+</div>

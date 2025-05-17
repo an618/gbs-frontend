@@ -1,0 +1,105 @@
+<div class="w-full flex justify-center items-center text-primary">
+  <div
+    class="xl:w-3/5 sm:w-3/4 w-full flex flex-col justify-center items-start gap-2 p-4"
+  >
+    <div class="w-full flex sm:justify-start justify-center items-center">
+      <img
+        src="assets/images/bankLogo.svg"
+        alt="avalog-logo"
+        i18n-alt="@@AvalogLogo"
+        class="sm:block hidden"
+      />
+      <img
+        src="assets/images/avalogMobileLogo.svg"
+        alt="avalog-logo"
+        i18n-alt="@@AvalogLogo"
+        class="sm:hidden block"
+      />
+    </div>
+    <div>
+      <h2
+        class="lg:text-4xl sm:text-3xl text-lg sm:font-medium font-extrabold sm:mb-2"
+        i18n="@@LoginText"
+      >
+        Login To Your Account
+      </h2>
+      <p class="sm:text-sm text-base" i18n="@@LoginDescription">
+        See what is going on with your business
+      </p>
+    </div>
+    <form
+      action="#"
+      method="post"
+      class="w-full flex flex-col gap-4"
+      (ngSubmit)="onSubmit($event)"
+      [formGroup]="signInForm"
+    >
+      <span class="flex flex-col sm:gap-0 gap-2">
+        <label for="username" class="text-sm font-semibold" i18n="@@UserName"
+          >UserName</label
+        >
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="h-10 px-4 border border-quaternary rounded-md focus:outline-none"
+          placeholder="{{ 'PleaseType' | translate }}"
+          i18n-placeholder="@@PleaseType"
+          autocomplete="username"
+          formControlName="username"
+        />
+        <span
+          class="text-error"
+          *ngIf="
+            (signInForm.controls['username']?.touched ||
+              signInForm.controls['username']?.dirty) &&
+            signInForm.controls['username']?.errors?.['required']
+          "
+          i18n="@@Validation1"
+          >Username is Requried
+        </span>
+      </span>
+
+      <span class="flex flex-col sm:gap-0 gap-2">
+        <label for="password" class="text-sm font-semibold" i18n="@@Password"
+          >Password</label
+        >
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="h-10 px-4 border border-quaternary rounded-md focus:outline-none"
+          placeholder="{{ 'PleaseType' | translate }}"
+          i18n-placeholder="@@PleaseType"
+          autocomplete="current-password"
+          formControlName="password"
+        />
+        <span
+          class="text-error"
+          *ngIf="
+            (signInForm.controls['password']?.touched ||
+              signInForm.controls['password']?.dirty) &&
+            signInForm.controls['password']?.errors?.['required']
+          "
+          i18n="@@Validation3"
+          >Password is Requried
+        </span>
+        <span
+          class="text-error"
+          *ngIf="signInForm.controls['password']?.errors?.['minlength']"
+          i18n="@@Validation4"
+          >Password should be at least 8 characters long
+        </span>
+      </span>
+      <app-button
+        [text]="constantService.textForLogin"
+        [type]="'submit'"
+        [class]="
+          'p-2 bg-muted text-white sm:text-lg text-base font-semibold rounded-md w-full'
+        "
+        [ngClass]="{ 'bg-secondary': !signInForm.invalid }"
+        [disabled]="signInForm.invalid"
+      />
+    </form>
+  </div>
+</div>

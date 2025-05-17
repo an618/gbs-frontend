@@ -1,0 +1,54 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"); */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #29314b;
+  --secondary: #002bb4;
+  --error: #e33133;
+  --muted: #b5c2e3;
+  --lightRed: #f08c8d;
+  --lightBlue: #1ba9ea;
+  --tertiary: #808aac;
+  --transparent: transparent;
+  --quaternary: #d3dcf4;
+  --white: #ffffff;
+  --quinary: #EDF6FB;
+}
+
+@font-face {
+  font-family: "Lato";
+  src: url(./assets/fonts/Lato-Regular.ttf);
+}
+@layer base {
+  html {
+    font-family: Lato;
+  }
+}
+
+/* input[type="range"]::-webkit-slider-runnable-track {
+  background: #d0d6dd;
+  appearance: none;
+  height: 0.1rem;
+} */
+/* 
+input[type="range"]::-moz-range-track {
+  background: #d0d6dd;
+  height: 0.1rem;
+} */
+
+/* input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -7px;
+} */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

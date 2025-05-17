@@ -1,0 +1,36 @@
+<div class="border border-quaternary">
+  <header class="flex justify-between items-center p-3 px-4">
+    <h3 class="sm:text-base text-sm text-primary font-bold">
+      {{ title }}
+    </h3>
+    <div class="flex items-center gap-4">
+      <app-button [class]="'flex items-center'" [type]="'button'">
+        <img
+          src="assets/icons/refreshIcon.svg"
+          alt="refresh-icon"
+          i18n-alt="@@RefreshIcon"
+        />
+      </app-button>
+      <app-button [class]="'flex items-center'" [type]="'button'">
+        <img
+          src="assets/icons/scaleIcon.svg"
+          alt="scale-icon"
+          i18n-alt="@@ScaleIcon"
+        />
+      </app-button>
+      <app-button
+        [class]="'flex items-center'"
+        [type]="'button'"
+        *ngIf="title === 'Orders'"
+      >
+        <img
+          src="assets/icons/threeDotIcon.svg"
+          alt="scale-icon"
+          i18n-alt="@@ScaleIcon"
+        />
+      </app-button>
+    </div>
+  </header>
+  <hr class="border border-quaternary" />
+  <ng-content></ng-content>
+</div>

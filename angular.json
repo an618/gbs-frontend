@@ -1,0 +1,127 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "goalbase": {
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "hi": {
+            "translation": "src/locale/messages.hi.json",
+            "baseHref": "hi/"
+          },
+          "ar": {
+            "translation": "src/locale/messages.ar.json",
+            "baseHref": "ar/"
+          }
+        }
+      },
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@ngx-env/builder:application",
+          "options": {
+            "localize": false,
+            "outputPath": "dist/goalbase",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "polyfills": ["zone.js", "@angular/localize/init"],
+            "tsConfig": "tsconfig.app.json",
+            "assets": ["src/assets"],
+            "styles": ["src/styles.css", "node_modules/ngx-toastr/toastr.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.production.ts"
+                }
+              ],
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kB",
+                  "maximumError": "4kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "localize": true,
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ]
+            },
+            "hi": {
+              "localize": ["hi"]
+            },
+            "ar": {
+              "localize": ["ar"]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@ngx-env/builder:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "goalbase:build:production"
+            },
+            "development": {
+              "buildTarget": "goalbase:build:development"
+            },
+            "hi": {
+              "buildTarget": "goalbase:build:development,hi"
+            },
+            "ar": {
+              "buildTarget": "goalbase:build:development,ar"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {}
+        },
+        "extract-i18n": {
+          "builder": "@ngx-env/builder:extract-i18n",
+          "options": {
+            "outputPath": "src/locale",
+            "buildTarget": "goalbase:build",
+            "format": "json"
+          }
+        },
+        "test": {
+          "builder": "@ngx-env/builder:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing",
+              "@angular/localize/init"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": ["src/assets"],
+            "styles": ["src/styles.css"],
+            "scripts": [],
+            "builderMode": "browser"
+          }
+        }
+      }
+    }
+  }
+}

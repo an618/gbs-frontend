@@ -1,0 +1,224 @@
+<form
+  [formGroup]="porfolioAllocationForm"
+  class="sm:h-auto h-[90dvh] min-h-full w-full p-2 flex flex-col gap-4 sm:justify-around justify-between items-center"
+>
+  <h2
+    class="sm:text-2xl text-xl sm:font-extrabold font-bold lg:w-3/4 sm:w-11/12 w-full"
+  >
+    {{
+      initialInvestment === 0
+        ? (constantService.monthlyAmountText | translate)
+        : showInitialOrMonthlyInvestment
+        ? (constantService.initialAmountText | translate)
+        : (constantService.monthlyAmountText | translate)
+    }}
+  </h2>
+  <div
+    class="overflow-auto border-quaternary lg:w-3/4 sm:w-11/12 w-full sm:p-0 p-4"
+  >
+    <table class="w-full">
+      <thead
+        class="sm:text-base text-primary text-center bg-quinary border border-quaternary text-nowrap"
+      >
+        <tr>
+          @for (item of constantService.portfolioAllocation; track $index) {
+          @if(item.heading==="Distribution"){
+          <th
+            class="text-primary text-start p-2 border border-quaternary relative"
+          >
+            {{ item.heading | translate }}
+            <app-button
+              [type]="'button'"
+              [class]="'absolute -top-1'"
+              (click)="setEditMode()"
+            >
+              <img
+                src="assets/icons/editIcon.svg"
+                alt="edit-icon"
+                i18n-alt="@@EditIcon"
+                class="w-12 h-12"
+              />
+            </app-button>
+          </th>
+          }@else{
+          <th class="text-primary text-start p-2 border border-quaternary">
+            {{ item.heading | translate }}
+          </th>
+          } }
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="sm:text-base text-primary text-start"
+          *ngFor="let item of modelPortfolio; let modelPortfolioIdx = index"
+        >
+          <td
+            class="text-primary font-bold p-2 border border-quaternary bg-quinary"
+          >
+            {{ item.assetClassName }}
+            <br />
+
+            {{
+              initialInvestment === 0
+                ? (monthlyInvestment | currency)
+                : showInitialOrMonthlyInvestment
+                ? (initialInvestment | currency)
+                : (monthlyInvestment | currency)
+            }}
+            X
+            {{
+              convertStringToNumber(item.assetClassAllocationPercentage) / 100
+                | percent
+            }}
+            =
+            {{
+              initialInvestment === 0
+                ? ((convertStringToNumber(item.assetClassAllocationPercentage) /
+                    100) *
+                    monthlyInvestment | currency)
+                : showInitialOrMonthlyInvestment
+                ? ((convertStringToNumber(item.assetClassAllocationPercentage) /
+                    100) *
+                    initialInvestment | currency)
+                : ((convertStringToNumber(item.assetClassAllocationPercentage) /
+                    100) *
+                    monthlyInvestment | currency)
+            }}
+          </td>
+          <td
+            class="text-primary border border-quaternary text-nowrap"
+            formGroupName="{{ sanitizeKey(item.assetClassName) }}"
+          >
+            @for (subItem of item.constitutes; track $index) {
+            <span
+              class="px-2 h-10 flex items-center"
+              formGroupName="{{ sanitizeKey(subItem.securityExchangeCode) }}"
+            >
+              {{ subItem.assetName }} -
+              {{
+                porfolioAllocationForm
+                  .get(sanitizeKey(item.assetClassName))
+                  ?.get(sanitizeKey(subItem.securityExchangeCode))
+                  ?.get("Percentage")?.value / 100 | percent
+              }}
+            </span>
+            @if($index!==2){
+            <hr class="border-t border-t-quaternary" />
+            } }
+          </td>
+          <td class="text-primary border border-quaternary w-[100px]">
+            @for (subItem of item.constitutes; track $index) {
+            <span class="flex justify-between h-10 items-center">
+              <span
+                class="flex items-center gap-0.5 w-full px-4 h-full"
+                [ngStyle]="{
+                  border: editMode
+                    ? '1px solid var(--tertiary)'
+                    : '1px solid transparent'
+                }"
+              >
+                <span class="mt-0.5">$</span>
+                <input
+                  type="number"
+                  id="{{ subItem.constituteId }}"
+                  name="{{ subItem.assetName }}"
+                  accept="{{ item.assetClassName }}"
+                  [attr.accessKey]="item.portfolioId"
+                  [ariaDescription]="
+                    subItem.securityExchangeCode + '-' + subItem.assetCurrency
+                  "
+                  [attr.aria-label]="item.assetClassAllocationPercentage"
+                  class="py-4 rounded-md h-full w-full min-w-36 focus:outline-none disabled:bg-transparent"
+                  placeholder="0"
+                  autocomplete="on"
+                  value="{{
+                    showInitialOrMonthlyInvestment
+                      ? savedPorfolioConstitue[modelPortfolioIdx]
+                          .userPortfolioConstitutesDto[$index].initialInvestment
+                      : savedPorfolioConstitue[modelPortfolioIdx]
+                          .userPortfolioConstitutesDto[$index].monthlyInvestment
+                  }}"
+                  [disabled]="!editMode"
+                  (input)="setAmountPercentage($event)"
+                />
+              </span>
+              @if(!porfolioAllocationForm.get(sanitizeKey(item.assetClassName))?.valid){
+              <span class="text-error text-sm text-nowrap">
+                Allocation is greater than
+                {{
+                  convertStringToNumber(item.assetClassAllocationPercentage) /
+                    100 | percent
+                }}
+              </span>
+              }
+            </span>
+            @if($index!==2){
+            <hr class="border-t border-t-quaternary" />
+            } }
+          </td>
+        </tr>
+
+        <tr class="sm:text-base text-primary text-start">
+          <td class="text-primary font-bold p-2 border border-quaternary">
+            Total
+          </td>
+          <td class="text-primary font-bold p-2 border border-quaternary"></td>
+          <td class="text-primary font-bold p-2 border border-quaternary">
+            {{
+              initialInvestment === 0
+                ? monthlyInvestment
+                : ((showInitialOrMonthlyInvestment
+                    ? initialInvestment
+                    : monthlyInvestment
+                  ) | currency)
+            }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div
+    class="lg:w-3/4 sm:w-11/12 w-full flex items-center"
+    [ngStyle]="{
+      'justify-content': questionnaireSkip ? 'end' : 'space-between'
+    }"
+  >
+    @if(!questionnaireSkip){
+    <app-button
+      (click)="goBack()"
+      [text]="constantService.textForBack | translate"
+      [type]="'button'"
+      [class]="
+        'border border-error text-base font-bold text-error rounded-md p-2 px-6 sm:block hidden'
+      "
+    />
+    }
+    <div class="flex gap-4">
+      <app-button
+        (click)="setMonthlyInvestment()"
+        [text]="
+          !showInitialOrMonthlyInvestment
+            ? (constantService.textForInitialInvestment | translate)
+            : (constantService.textForMonthlyInvestment | translate)
+        "
+        [type]="'button'"
+        [class]="
+          'text-base font-bold text-error rounded-md p-2 px-6 disabled:hidden'
+        "
+        class="sm:w-auto w-full"
+        [disabled]="initialInvestment === 0"
+      /><app-button
+        (click)="runPortfolioAllocation()"
+        [text]="constantService.textForProceed | translate"
+        [type]="'button'"
+        [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+        class="sm:w-auto w-full"
+        [ngClass]="{
+          'bg-tertiary': !porfolioAllocationForm.valid
+        }"
+        [disabled]="!porfolioAllocationForm.valid"
+      />
+    </div>
+  </div>
+</form>

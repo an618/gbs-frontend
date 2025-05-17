@@ -1,0 +1,60 @@
+<div class="p-2 flex flex-col sm:justify-around justify-between items-center">
+  <div class="text-primary flex flex-col gap-2">
+    <h2
+      class="sm:text-3xl text-xl sm:font-extrabold font-bold"
+      i18n="@@MonteCarloSimulation"
+    >
+      {{ "MonteCarloSimulation" | translate }}
+    </h2>
+    <p class="text-sm" i18n="@@MonteCarloDescription">
+      {{ "MonteCarloDescription" | translate }}
+    </p>
+  </div>
+  @if (loaderService.getLoaderValue()) {
+  <div class="flex justify-center items-center h-[55dvh] min-h-96">
+    <app-loader class="h-14 w-14" />
+  </div>
+  }@else {
+  <div class="flex justify-center items-center w-full">
+    <img [src]="imgSrc" id="monte-carlo-simulation-img" />
+  </div>
+  }
+  <app-button
+    (click)="setShowPopUp()"
+    [text]="constantService.textForProceed | translate"
+    [type]="'button'"
+    [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6 my-4'"
+    class="sm:w-auto w-full"
+  />
+</div>
+
+<div
+  class="fixed z-50 left-0 top-0 bg-[#1E2439D1] w-full h-full overflow-auto"
+  *ngIf="showPopUp"
+>
+  <div class="flex justify-center items-center h-full w-full">
+    <div class="bg-white p-4 rounded-md w-1/2">
+      <h2 class="text-primary text-center" i18n="@@MonteDescriptionText">
+        {{ "MonteDescriptionText" | translate }}
+      </h2>
+      <div class="flex justify-center items-center gap-4">
+        <app-button
+          (click)="setShowPopUp()"
+          [text]="constantService.textForCancel | translate"
+          [type]="'button'"
+          [class]="'text-base font-bold text-error rounded-md p-2 px-6 my-4'"
+          class="sm:w-auto w-full"
+        />
+        <app-button
+          (click)="viewSavingProbability()"
+          [text]="constantService.textForConfirm | translate"
+          [type]="'button'"
+          [class]="
+            'bg-error text-base font-bold text-white rounded-md p-2 px-6 my-4'
+          "
+          class="sm:w-auto w-full"
+        />
+      </div>
+    </div>
+  </div>
+</div>

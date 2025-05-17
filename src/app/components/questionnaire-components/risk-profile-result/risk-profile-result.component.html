@@ -1,0 +1,126 @@
+<form
+  (ngSubmit)="onSubmit($event)"
+  class="flex flex-col items-center p-4"
+  [formGroup]="riskProfileResultForm"
+>
+  <div class="lg:w-3/4 sm:w-11/12 w-full flex flex-col gap-2">
+    @if (loaderService.getLoaderValue()) {
+    <h3 class="text-xl font-bold text-lightRed" i18n="@@RiskProfileResults">
+      {{ "RiskProfileResults" | translate }}
+    </h3>
+
+    <div class="flex">
+      <app-loader class="h-8 w-8" />
+    </div>
+    }@else { @if( checkStatus.COMPLETED===status){
+    <h3 class="text-xl font-bold text-lightRed" i18n="@@RiskProfileResults">
+      {{ "RiskProfileResults" | translate }}
+    </h3>
+    <p class="text-primary sm:text-xl" i18n="@@ScoreDescription1">
+      {{ "ScoreDescription1" | translate }}{{ score }}
+    </p>
+    }@else {
+    <h3
+      class="text-xl font-bold text-error"
+      i18n="@@RiskProfileIncompleteResult"
+    >
+      Your risk profile is incomplete.
+    </h3>
+    <p class="text-error" i18n="@@ScoreDescription2">
+      {{ "ScoreDescription2" | translate }}
+    </p>
+    } }
+
+    <div class="overflow-auto border-quaternary">
+      <table class="w-full text-nowrap">
+        <thead class="text-sm font-normal bg-quinary">
+          <tr>
+            @for (item of constantService.riskProfileResultHeader; track
+            item.id) {
+            <th
+              class="text-primary text-start border border-quaternary p-2 py-3"
+            >
+              {{ item.heading | translate }}
+            </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of riskProfileResultBody; track $index) {
+          <tr class="sm:text-base ]">
+            <td class="text-primary font-bold p-2 border border-quaternary">
+              {{ item.risk_score_lower }} - {{ item.risk_score_upper }}
+            </td>
+            <td
+              class="p-2 border border-quaternary"
+              [style]="{ color: item.color }"
+            >
+              <span
+                class="w-2 h-2 rounded-full inline-block mr-1"
+                [style]="{ backgroundColor: item.color }"
+              >
+              </span
+              >{{ item.risk_profile }}
+            </td>
+            <td
+              class="text-primary p-2 border border-quaternary whitespace-pre-line text-nowrap"
+            >
+              {{ item.definition.split(".")[0] }} <br />
+              {{ item.definition.split(".")[1] }}
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <div
+      class="text-primary sm:text-base text-sm flex sm:flex-row flex-col sm:items-center items-start gap-4"
+    >
+      <label for="date" i18n="@@DateLatestRiskProfiling">{{
+        "DateLatestRiskProfiling" | translate
+      }}</label>
+      <input
+        type="date"
+        id="date"
+        formControlName="date"
+        min="2024-01-01"
+        [max]="maxDate"
+        class="h-10 xl:w-80 sm:w-1/2 w-full px-4 border border-[#DED2D9] rounded-md focus:outline-none"
+      />
+    </div>
+    <hr class="border-quaternary" />
+    <div class="flex items-baseline gap-2">
+      <input type="checkbox" id="check" formControlName="check" />
+      <label for="check" i18n="@@RiskProfileDescription">
+        {{ "RiskProfileDescription" | translate }}</label
+      >
+    </div>
+    <div class="flex sm:justify-end gap-4 w-full">
+      @if(checkStatus.COMPLETED!==status){
+      <app-button
+        [text]="constantService.textForBack | translate"
+        [type]="'button'"
+        (click)="goBack()"
+        [class]="
+          'border border-error rounded-md sm:px-6 p-2 text-error font-bold sm:w-auto w-full sm:flex hidden'
+        "
+      />
+      }
+      <app-button
+        [text]="constantService.textforSuitability | translate"
+        [type]="'submit'"
+        [class]="'bg-error sm:px-6 p-2 rounded-md text-white font-bold'"
+        [ngClass]="{
+            'bg-tertiary':
+              !riskProfileResultForm.controls['check'].value ||
+              !riskProfileResultForm.controls['date'].valid,
+          }"
+        [disabled]="
+          !riskProfileResultForm.controls['check'].value ||
+          !riskProfileResultForm.controls['date'].valid
+        "
+        class="sm:w-auto w-full"
+      />
+    </div>
+  </div>
+</form>

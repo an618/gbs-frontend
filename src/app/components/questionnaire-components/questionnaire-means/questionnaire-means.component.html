@@ -1,0 +1,47 @@
+<div
+  class="w-full h-full p-2 flex flex-col justify-evenly items-start sm:gap-2 gap-4"
+>
+  <img
+    src="assets/images/riskProfile.svg"
+    alt="risk-profile-icon"
+    i18n-alt="@@RiskProfileIcon"
+    class="sm:w-auto w-12"
+  />
+
+  <div class="flex flex-col gap-4 sm:w-11/12">
+    <h2
+      class="text-primary sm:text-base sm:font-bold"
+      i18n="@@QuestionnaireText1"
+    >
+      {{ "QuestionnaireText1" | translate }}
+    </h2>
+    <p class="text-sm">
+      {{ description | translate }}
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-4" *ngIf="show">
+    <p class="text-primary text-base font-bold" i18n="@@QuestionnaireText2">
+      {{ "QuestionnaireText2" | translate }}
+    </p>
+    <span class="flex gap-2 items-center">
+      <app-button
+        (click)="tryOurCalculator()"
+        [text]="constantService.textForTryOrCalculator | translate"
+        [type]="'button'"
+        [class]="
+          'bg-error sm:px-6 p-2 rounded-md text-white font-bold sm:w-auto w-full'
+        "
+      />
+
+      <app-button [type]="'button'" [class]="'flex items-center'">
+        <img
+          src="assets/icons/infoIcon.svg"
+          alt="info-icon"
+          i18n-alt="@@InfoIcon"
+          width="16"
+        />
+      </app-button>
+    </span>
+  </div>
+</div>

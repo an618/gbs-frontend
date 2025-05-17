@@ -1,0 +1,17 @@
+<label for="{{ questionnaire }}">{{ questionnaire }}</label>
+<select
+  id="{{ questionnaire }}"
+  type="text"
+  [attr.placeholder]="'PleaseType' | translate"
+  class="h-10 p-2 border border-quaternary rounded-md focus:outline-none sm:w-full w-40 bg-white text-sm font-normal"
+  autocomplete="on"
+>
+  <option value="" disabled selected i18n="@@MaritalStatus">
+    {{ "MaritalStatus" | translate }}
+  </option>
+  @for (subItem of questionnairesOptions; track $index ) {
+  <option value="{{ subItem.answerText }}">
+    {{ subItem.answerText }}
+  </option>
+  }
+</select>

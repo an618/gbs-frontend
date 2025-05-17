@@ -1,0 +1,19 @@
+<nav
+  class="w-full flex sm:justify-center justify-start items-center sm:h-20 h-16 sm:px-4 sm:shadow-sm shadow-md"
+>
+  <menu
+    class="flex sm:gap-4 gap-2 text-tertiary font-bold h-full justify-center items-center text-nowrap sm:overflow-hidden overflow-scroll w-full"
+  >
+    @for (menu of navMenu; track menu.id) {
+    <app-button
+      [type]="'button'"
+      routerLink="{{ menu.link }}"
+      class="px-2 flex items-center h-full"
+      routerLinkActive="isActive"
+      [disabled]="menu.disable!"
+    >
+      {{ menu.name | translate }}
+    </app-button>
+    }
+  </menu>
+</nav>

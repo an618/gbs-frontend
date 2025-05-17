@@ -1,0 +1,74 @@
+<div
+  class="sm:h-auto h-[90dvh] min-h-full w-full p-2 flex flex-col gap-4 sm:justify-around justify-between items-center"
+>
+  <div class="w-full flex flex-col gap-4 items-center sm:justify-evenly">
+    <div
+      class="text-primary flex flex-col gap-2 text-start 2xl:w-1/3 lg:w-1/2 sm:w-3/4 w-full"
+    >
+      <h2
+        class="sm:text-2xl text-xl sm:font-extrabold font-bold mt-4"
+        i18n="@@FinancialInformationProvided"
+      >
+        {{ "FinancialInformationProvided" | translate }}
+      </h2>
+    </div>
+    <div class="overflow-auto 2xl:w-1/3 lg:w-1/2 sm:w-3/4 w-full">
+      <table class="w-full">
+        <thead class="w-full text-nowrap">
+          @for (item of constantService.investmentTableHeader; track item.id) {
+          <th class="sm:text-xl font-normal p-1">
+            <tr class="flex justify-center">
+              {{
+                item.heading | translate
+              }}
+            </tr>
+          </th>
+          }
+        </thead>
+        <tbody class="w-full text-primary sm:text-xl text-base">
+          @for (item of investmentTableBody; track item.id) {
+          <tr class="border border-quaternary text-center">
+            <th
+              class="border border-quaternary sm:p-4 p-2 text-start font-normal bg-quinary"
+            >
+              {{ item.heading | translate }}
+            </th>
+            <td class="border border-quaternary sm:p-4 p-2">
+              @if(item.id===1 || item.id===4){
+              {{ item.financial | currency }}
+              } @else if(item.id==2){
+              {{ convertStringToNumber(item.financial) / 100 | percent }}
+              } @else{
+              {{ item.financial }}
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+        <tfoot class="text-center text-tertiary text-sm">
+          <td></td>
+          <td class="p-2" i18n="@@BaseCurrencyUSD">
+            {{ "BaseCurrencyUSD" | translate }}
+          </td>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <div class="w-full flex justify-center items-center gap-4">
+    <app-button
+      (click)="reCalculate()"
+      [text]="constantService.textForReCalculate | translate"
+      [type]="'button'"
+      [class]="'text-base font-bold text-error rounded-md p-2 px-6'"
+      class="sm:w-auto w-full"
+    />
+    <app-button
+      (click)="proceed()"
+      [text]="constantService.textForProceed | translate"
+      [type]="'button'"
+      [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+      class="sm:w-auto w-full"
+    />
+  </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="w-full flex flex-col gap-2">
+  <div class="flex sm:gap-0 gap-4 items-center justify-between w-full">
+    @if (questionnaire.questionText) {
+    <h3 class="text-primary text-sm">{{ questionnaire.questionText }}</h3>
+    } @if(questionnaire.questionText==="Free Cash Flow (c) = (a) - (b)"){
+    <span class="flex items-center border border-quaternary p-1 rounded-sm">
+      <input
+        type="number"
+        name="{{ questionnaire.questionText }}"
+        accept="{{ questionnaire.questionId }}"
+        [value]="freeCashFlow || 0"
+        (input)="setRangeValue($event)"
+        readonly
+        class="text-end border-x-4 border-x-transparent text-[#0051C7] sm:w-40 w-28 focus:outline-none"
+        max="10000000"
+      />
+      <span class="text-primary text-sm">$</span>
+    </span>
+    } @else if(questionnaire.questionText==='Net Asset Value (f) = (d) - (e)'){
+    <span class="flex items-center border border-quaternary p-1 rounded-sm">
+      <input
+        type="number"
+        name="{{ questionnaire.questionText }}"
+        accept="{{ questionnaire.questionId }}"
+        [value]="netAssetValue || 0"
+        (input)="setRangeValue($event)"
+        readonly
+        class="text-end border-x-4 border-x-transparent text-[#0051C7] sm:w-40 w-28 focus:outline-none"
+        min="0"
+        max="10000000"
+      />
+      <span class="text-primary text-sm">$</span>
+    </span>
+    } @else {
+    <span class="flex items-center border border-quaternary p-1 rounded-sm">
+      <input
+        type="number"
+        name="{{ questionnaire.questionText }}"
+        accept="{{ questionnaire.questionId }}"
+        [value]="rangeValues[questionnaire.questionText] || selectedAnswer || 0"
+        class="text-end border-x-4 border-x-transparent text-[#0051C7] sm:w-40 w-28 focus:outline-none"
+        (input)="setRangeValue($event)"
+        max="10000000"
+      />
+      <span class="text-primary text-sm">$</span>
+    </span>
+    }
+  </div>
+  @if(questionnaire.questionText==="Free Cash Flow (c) = (a) - (b)"){
+  <span class="flex flex-col">
+    <input
+      type="range"
+      accept="{{ questionnaire.questionId }}"
+      name="{{ questionnaire.questionText }}"
+      [value]="freeCashFlow || 0"
+      (input)="setRangeValue($event)"
+      readonly
+      disabled
+      max="10000000"
+    />
+    <span>{{ freeCashFlow || 0 | currency }}</span>
+  </span>
+  } @else if(questionnaire.questionText==='Net Asset Value (f) = (d) - (e)'){
+  <span class="flex flex-col">
+    <input
+      type="range"
+      accept="{{ questionnaire.questionId }}"
+      name="{{ questionnaire.questionText }}"
+      [value]="netAssetValue || 0"
+      (input)="setRangeValue($event)"
+      readonly
+      disabled
+      max="10000000"
+    />
+    <span>{{ netAssetValue || 0 | currency }}</span>
+  </span>
+  } @else {
+  <span class="flex flex-col">
+    <input
+      type="range"
+      accept="{{ questionnaire.questionId }}"
+      name="{{ questionnaire.questionText }}"
+      [value]="rangeValues[questionnaire.questionText] || selectedAnswer || 0"
+      (input)="setRangeValue($event)"
+      max="10000000"
+    />
+    <span>{{
+      rangeValues[questionnaire.questionText] || selectedAnswer || 0 | currency
+    }}</span>
+  </span>
+  }
+</div>

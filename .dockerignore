@@ -1,0 +1,17 @@
+.prettierrc.json
+.prettierignore
+eslint.config.js
+.git
+.gitignore
+.editorconfig
+.husky
+.angular
+.vscode
+
+node_modules
+*.log
+Dockerfile
+test/
+dist/
+
+**/.env

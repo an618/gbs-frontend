@@ -1,0 +1,47 @@
+<div
+  class="w-full sm:h-full h-[85dvh] min-h-96: my-4 flex flex-col items-center sm:justify-normal justify-between p-2"
+>
+  <div class="p-2 flex flex-col items-center lg:w-1/2 sm:w-11/12 w-full">
+    <h2
+      class="text-primary sm:text-3xl text-xl sm:font-extrabold font-bold"
+      i18n="@@CongratulationsSettingGoal"
+    >
+      {{ "CongratulationsSettingGoal" | translate }}
+    </h2>
+    <div class="sm:text-lg text-base font-medium w-full my-2">
+      <div class="indent-12 my-4" i18n="@@SettingGoalDescription1">
+        {{ "SettingGoalDescription1" | translate }}
+      </div>
+
+      <div class="indent-12 my-4" i18n="@@SettingGoalDescription2">
+        {{ "SettingGoalDescription2" | translate }}
+      </div>
+
+      <div class="indent-12 my-4" i18n="@@SettingGoalDescription3">
+        {{ "SettingGoalDescription3" | translate }}
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-2">
+    <app-button
+      (click)="download()"
+      [text]="constantService.textForDownload | translate"
+      [type]="'button'"
+      [class]="
+        'bg-error text-base font-bold text-white rounded-md p-2 px-6 disabled:bg-tertiary disabled:cursor-not-allowed'
+      "
+      class="sm:w-auto w-full"
+      [disabled]="disableDownloadButton"
+    />
+    <!-- <app-button
+      (click)="placeOrder()"
+      [text]="constantService.textForPlaceOrder | translate"
+      [type]="'button'"
+      [class]="
+        'bg-error text-base font-bold text-white rounded-md p-2 px-6 disabled:bg-tertiary disabled:cursor-not-allowed'
+      "
+      class="sm:w-auto w-full"
+    /> -->
+  </div>
+</div>

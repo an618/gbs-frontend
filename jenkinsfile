@@ -1,0 +1,80 @@
+pipeline {
+    agent any 
+    environment {
+        GCR_REGION = "asia-south1-docker.pkg.dev"
+        GCR_REPO = "hct-1-406810/avaloq/avaloq-frontend"
+        GIT_COMMIT_SHORT = "${GIT_COMMIT[0..6]}"
+        IMAGE_NAME = "${GCR_REGION}/${GCR_REPO}:v1.0.${BUILD_NUMBER}"
+    }
+
+    stages {
+
+        stage ('Build commit message'){
+            steps {
+                script {
+                    env.GIT_COMMIT_MSG = sh(returnStdout: true, script: "git log -1 --pretty=%B").trim()
+                    echo "Commit message is ${env.GIT_COMMIT_MSG}"
+                    if (env.GIT_COMMIT_MSG.contains("Build ready") || env.GIT_COMMIT_MSG.contains("build ready")) {
+                        echo "Commit message contains 'build ready'. Proceeding with the build."
+                    } else {
+                        echo "Commit message does not contain 'build ready'. Skipping the build."
+                        currentBuild.result = 'ABORTED'
+                        error("Aborting the build as the commit message does not contain 'build ready'.")
+                    }
+                }
+            }
+        }
+        
+        stage ('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -t ${IMAGE_NAME} . --no-cache
+                docker images
+                '''
+            }
+        }
+
+        stage ('Scan Docker Image') {
+            steps {
+                script {
+                    echo "Running Trivy vulnerabilities checks for ${IMAGE_NAME}"
+                    sh '''
+                    trivy image --format table -o trivy-image-report.html --severity HIGH,CRITICAL ${IMAGE_NAME}
+                    '''
+                    //trivy image --format table -o trivy-image-report.json --severity HIGH,CRITICAL ${IMAGE_NAME}
+                }
+            }
+        }
+
+        stage ('Configure GAR and push Image') {
+            steps {
+                sh '''
+                gcloud auth configure-docker ${GCR_REGION}
+                docker push ${IMAGE_NAME}
+                '''
+            }
+        }
+
+        stage ('Remove Docker Image') {
+            steps {
+                sh '''
+                docker rmi ${IMAGE_NAME}
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+
+        success {
+            echo 'Docker image pushed successfully in Artifact Registry'
+        }
+
+        failure {
+            echo 'Failed to push image in Artifact Registry'
+        }
+    }
+}

@@ -1,0 +1,64 @@
+<form
+  (submit)="onSubmit($event)"
+  class="w-full sm:h-[35rem] h-[90dvh] min-h-96 flex flex-col sm:justify-evenly justify-between items-center p-4"
+>
+  <div class="flex flex-col h-full sm:w-auto w-full">
+    <div
+      class="w-full h-full flex flex-col sm:justify-evenly items-center sm:gap-0 gap-4"
+    >
+      <div class="sm:text-center text-start w-full">
+        <h2
+          class="sm:text-4xl text-lg sm:font-medium font-extrabold text-primary mb-2"
+        >
+          @if (goalTypeParams === "new") {
+          <span i18n="@@NewGoal">{{ "NewGoal" | translate }}</span> } @else {
+          <span i18n="@@Review">{{ "Review" | translate }}</span> }
+        </h2>
+        <p
+          class="text-sm"
+          *ngIf="goalTypeParams === 'new'"
+          i18n="@@UnderstandYourFinancialSituation"
+        >
+          {{ "UnderstandYourFinancialSituation" | translate }}
+        </p>
+      </div>
+      <div
+        class="w-full flex sm:flex-row flex-col gap-6 justify-center text-primary lg:text-3xl sm:text-2xl text-base sm:font-extrabold font-bold"
+      >
+        @if (goalTypeParams === "new") { @for (item of
+        constantService.newGoalList; track item.id) {
+        <app-button
+          [type]="'button'"
+          [class]="
+            'relative border border-error rounded-md lg:p-6 p-4 sm:h-72 h-24 lg:w-72 w-full disabled:opacity-50 disabled:cursor-not-allowed'
+          "
+          (click)="setGoalType(item.title)"
+          [ngClass]="{ 'border-quaternary': goalType !== item.title }"
+          [disabled]="item.disable"
+        >
+          {{ item.title | translate }}
+          <span
+            class="absolute sm:p-2 p-1 sm:py-2.5 py-1.5 bg-error rounded-sm top-0 right-0"
+            *ngIf="goalType === item.title"
+          >
+            <app-tick />
+          </span>
+        </app-button>
+        } }
+      </div>
+    </div>
+
+    <div class="flex justify-end w-full">
+      <app-button
+        [text]="constantService.textForContiue | translate"
+        [type]="'submit'"
+        [class]="
+          'bg-error sm:px-6 p-2 rounded-md text-white font-bold sm:w-auto w-full'
+        "
+        class="sm:w-auto w-full"
+        [ngClass]="{ 'bg-tertiary': !goalType }"
+        [disabled]="!goalType"
+      />
+    </div>
+  </div>
+</form>

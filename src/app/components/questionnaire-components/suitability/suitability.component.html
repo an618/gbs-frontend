@@ -1,0 +1,157 @@
+<div class="w-full flex h-full sm:flex-row flex-col">
+  @if(loaderService.getLoaderValue()){
+  <div class="flex justify-center items-center h-96 w-full">
+    <app-loader class="h-12 w-12" />
+  </div>
+  }@else{
+  <form
+    [formGroup]="suitabilityForm"
+    (ngSubmit)="onSubmit($event)"
+    class="flex flex-col sm:items-center items-start p-2 lg:w-4/5 sm:w-3/4 w-full"
+  >
+    <div class="xl:w-2/3 sm:w-11/12 w-full h-full flex flex-col gap-2">
+      @for (questionNestedLevel1 of questionnaireTemplateSuitability; track
+      $index) { @if( questionCount === $index+1){
+      <h3 class="text-sm font-bold text-lightRed" i18n="@@QuestionCount">
+        QUESTION {{ questionNestedLevel1.order }} OF
+        {{ questionnaireTemplateSuitability.length }}
+      </h3>
+      @switch (questionNestedLevel1.questionType) { @case
+      (QuestionTypeEnum.RADIO_BUTTON_TEXT) { @if(questionCount===1
+      ||questionCount===5 ){
+      <app-questionnaire-option-based
+        [h3Class]="'sm:text-xl text-lg font-extrabold text-primary'"
+        [divClass]="'flex gap-2'"
+        [count]="count"
+        [questionId]="questionNestedLevel1.questionId"
+        [questionnaire]="questionNestedLevel1.questionText"
+        [questionnairesOptions]="questionNestedLevel1.answers"
+        (selectedOption)="setSelectedAnswer($event)"
+      />
+      }@else{
+      <app-questionnaire-option-based
+        [h3Class]="'sm:text-xl text-lg font-extrabold text-primary'"
+        [divClass]="'flex flex-col'"
+        [count]="count"
+        [questionId]="questionNestedLevel1.questionId"
+        [questionnaire]="questionNestedLevel1.questionText"
+        [questionnairesOptions]="questionNestedLevel1.answers"
+        (selectedOption)="setSelectedAnswer($event)"
+      />
+      } } @default {
+      <h4 class="sm:text-xl text-lg font-extrabold text-primary">
+        {{ questionNestedLevel1.questionText }}
+      </h4>
+      } } @if(questionNestedLevel1.nestedQuestions){ @if(questionCount === 1){
+      <app-sutaibility-questionnaire-table-1
+        [type]="type"
+        [count]="count"
+        [questionnairesOptions]="questionNestedLevel1.nestedQuestions"
+        (fieldValue)="setSelectedAnswer($event)"
+      />
+      } @for (questionNestedLevel2 of questionNestedLevel1.nestedQuestions;
+      track $index) { @switch (questionNestedLevel2.questionType) { @case
+      (QuestionTypeEnum.RADIO_BUTTON_TEXT) { @if (questionCount!==1 &&
+      questionCount!==6 ) {
+      <app-questionnaire-option-based
+        [h3Class]="'sm:text-xl text-lg font-extrabold text-primary'"
+        [divClass]="'flex flex-wrap gap-2'"
+        [count]="count"
+        [questionId]="questionNestedLevel2.questionId"
+        [questionnaire]="questionNestedLevel2.questionText"
+        [questionnairesOptions]="questionNestedLevel2.answers"
+        (selectedOption)="setSelectedAnswer($event)"
+      />
+      } } @case (QuestionTypeEnum.CHECKBOX_BUTTON_TEXT) {
+      <app-questionnaire-checkbox-based
+        [h3Class]="'sm:text-base text-sm font-bold'"
+        [divClass]="'grid sm:grid-cols-3 grid-cols-1 items-center text-nowrap'"
+        [count]="count"
+        [questionId]="questionNestedLevel2.questionId"
+        [questionnaire]="questionNestedLevel2.questionText"
+        [questionnairesOptions]="questionNestedLevel2.answers"
+        (selectedOption)="setSelectedAnswer($event)"
+      />
+      } @case (QuestionTypeEnum.INTEGER) {
+      <app-questionnaire-range-input-based
+        [financialSituation]="suitabilityForm.value"
+        [count]="count"
+        [questionId]="questionNestedLevel2.questionId"
+        [questionnaire]="questionNestedLevel2"
+        (rangeValue)="setSelectedAnswer($event)"
+      />
+      } } @if (questionNestedLevel2.nestedQuestions) { @if(questionCount === 6){
+      <app-sutaibility-questionnaire-table-6
+        [count]="count"
+        [questionnairesOptions]="questionNestedLevel2.nestedQuestions"
+        (fieldValue)="setSelectedAnswer($event)"
+      />
+      } @for (questionNestedLevel3 of questionNestedLevel2.nestedQuestions;
+      track $index) { @switch (questionNestedLevel3.questionType) { @case
+      (QuestionTypeEnum.INPUT_TEXT) {
+      <div class="flex gap-4 items-center">
+        <label for="{{ questionNestedLevel3.order }}" class="text-nowrap">{{
+          questionNestedLevel3.questionText
+        }}</label>
+        <input
+          accept="{{ questionNestedLevel3.questionId }}"
+          type="text"
+          name="{{ questionNestedLevel3.questionText }}"
+          placeholder="{{ 'PleaseType' | translate }}"
+          class="text-sm font-normal h-10 px-4 border border-quaternary rounded-md focus:outline-none sm:w-full w-40"
+          autocomplete="on"
+          (input)="setSelectedAnswer($event)"
+        />
+      </div>
+      } } } } } } } }
+      <div class="flex sm:justify-between w-full mt-4">
+        @if (questionCount !== 1) {
+        <app-button
+          [text]="constantService.textForBack | translate"
+          (click)="backQuestion()"
+          [type]="'button'"
+          [class]="
+            'border border-error rounded-md text-error sm:px-6 p-2 font-bold sm:w-auto w-full sm:block hidden'
+          "
+        />
+        }@else{
+        <span></span>
+        }
+        <div class="flex gap-2 sm:w-auto w-full">
+          <app-button
+            [text]="constantService.textForSkip | translate"
+            (click)="skipQuestion()"
+            [type]="'button'"
+            [class]="
+              'sm:px-6 p-2 border border-error rounded-md text-error font-bold'
+            "
+            class="sm:w-auto w-full"
+          />
+          <app-button
+            [text]="
+              questionCount === 8
+                ? (constantService.textForCheckSore | translate)
+                : (constantService.textForContiue | translate)
+            "
+            [type]="'submit'"
+            [class]="
+              'bg-error sm:px-6 p-2 rounded-md text-white font-bold sm:w-auto w-full'
+            "
+            [ngClass]="{
+              'bg-tertiary': !hasFormValue()
+            }"
+            [disabled]="!hasFormValue()"
+            class="sm:w-auto w-full"
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+  }
+  <div class="lg:w-1/5 sm:w-1/3 w-full">
+    @for (item of questionnaireTemplateSuitability; track item.order) {
+    @if(questionCount===item.order){
+    <app-questionnaire-means [description]="item.description" />
+    } }
+  </div>
+</div>

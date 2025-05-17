@@ -1,0 +1,621 @@
+<div
+  class="flex flex-col gap-4 sm:items-center items-start p-4 w-full sm:h-full h-[85dvh] min-h-96"
+>
+  <h3
+    class="text-primary sm:text-3xl text-xl sm:font-extrabold font-bold"
+    i18n="@@FinancialCalculator"
+  >
+    {{ "FinancialCalculator" | translate }}
+  </h3>
+  @if(questionnaireSkip){
+  <div class="flex items-center gap-2 2xl:w-1/3 xl:w-1/2 sm:w-3/4 w-full my-2">
+    <span
+      class="lg:p-3 p-2 lg:px-5 px-4 text-white bg-tertiary lg:text-3xl text-lg font-extrabold rounded-[100%]"
+      [ngStyle]="{
+            'background-color': step === 1 || true ? '#e33133' : 'none',
+          }"
+      i18n="@@1"
+      >{{ "1" | translate }}</span
+    >
+    <hr
+      class="flex-grow w-full"
+      [ngStyle]="{
+            border:
+              step === 2 || step === 3
+                ? '1px solid #e33133'
+                : '1px solid #d3dcf4',
+          }"
+    />
+    <span
+      class="lg:p-3 p-2 lg:px-5 px-4 text-white lg:text-3xl text-lg font-extrabold rounded-[100%]"
+      [ngStyle]="{
+            'background-color': step === 2 || step === 3  ? '#e33133' : '#808aac',
+          }"
+      i18n="@@2"
+      >{{ "2" | translate }}</span
+    >
+  </div>
+  @if(step===1){
+  <form
+    [formGroup]="defaultFinancialCalculator"
+    (ngSubmit)="skipOnSubmit($event)"
+    class="flex flex-col gap-4 sm:justify-normal justify-between items-center w-full h-full"
+  >
+    <div
+      class="flex flex-col gap-8 border border-primary p-4 rounded-md 2xl:w-1/3 xl:w-1/2 sm:w-3/4 w-full"
+    >
+      <div
+        class="flex sm:flex-row flex-col gap-4 justify-between items-center w-full"
+      >
+        <label
+          for="initialInvestment"
+          class="sm:text-lg text-base font-medium"
+          i18n="@@InitialInvestmentText"
+          >{{ "InitialInvestmentText" | translate }}
+        </label>
+        <span
+          class="flex items-center border border-tertiary rounded-md p-1 px-2 sm:w-44"
+        >
+          <input
+            #initialInvestment
+            type="text"
+            formControlName="initialInvestment"
+            (input)="
+              initialInvestment.value = keepCodeFormatted(
+                initialInvestment.value
+              )
+            "
+            id="initialInvestment"
+            class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+          />
+          <span id="initialInvestment" class="text-primary text-sm">$</span>
+        </span>
+      </div>
+      <div
+        class="flex sm:flex-row flex-col gap-4 justify-between items-center w-full"
+      >
+        <label
+          for="monthlyInvestment"
+          class="sm:text-lg text-base font-medium"
+          i18n="@@MonthlyInvestmentText"
+          >{{ "MonthlyInvestmentText" | translate }}</label
+        >
+        <span
+          class="flex items-center border border-tertiary rounded-md p-1 px-2 sm:w-44"
+        >
+          <input
+            #monthlyInvestment
+            type="text"
+            formControlName="monthlyInvestment"
+            (input)="
+              monthlyInvestment.value = keepCodeFormatted(
+                monthlyInvestment.value
+              )
+            "
+            id="monthlyInvestment"
+            class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+          />
+          <span id="monthlyInvestment" class="text-primary text-sm">$</span>
+        </span>
+      </div>
+      <div
+        class="flex sm:flex-row flex-col gap-4 justify-between items-center w-full"
+      >
+        <label
+          for="expectedAnnualRateOfReturnPercentage"
+          class="sm:text-lg text-base font-medium"
+          i18n="@@ExpectedAnnualText"
+        >
+          {{ "ExpectedAnnualText" | translate }}
+        </label>
+        <span
+          class="flex items-center border border-tertiary rounded-md p-1 px-2 sm:w-44"
+        >
+          <input
+            #expectedAnnualROI
+            type="number"
+            formControlName="expectedAnnualROI"
+            (input)="
+              expectedAnnualROI.value = keepCodeFormatted(
+                expectedAnnualROI.value
+              )
+            "
+            id="expectedAnnualROI"
+            class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+          />
+          <span id="expectedAnnualROI" class="text-primary text-sm">%</span>
+        </span>
+      </div>
+      <div
+        class="flex sm:flex-row flex-col gap-4 w-full justify-between items-center"
+      >
+        <label
+          for="timeHorizon"
+          class="sm:text-lg text-base font-medium"
+          i18n="@@TimeHorizon"
+          >{{ "TimeHorizon" | translate }}</label
+        >
+        <span
+          class="flex items-center border border-tertiary rounded-md p-1 px-2 sm:w-44"
+        >
+          <input
+            type="text"
+            formControlName="timeHorizon"
+            id="timeHorizon"
+            class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+          />
+          <span id="timeHorizon" class="text-primary text-sm">years</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="flex justify-center 2xl:w-1/3 xl:w-1/2 sm:w-3/4 w-full">
+      <app-button
+        [text]="constantService.textForNext | translate"
+        [type]="'submit'"
+        [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+        class="sm:w-auto w-full"
+      />
+    </div>
+  </form>
+  }@else {
+  <div
+    class="flex flex-col gap-4 sm:justify-normal justify-between items-center w-full h-full"
+  >
+    <div
+      class="flex flex-col justify-center items-center gap-4 border border-primary p-4 rounded-md 2xl:w-1/3 xl:w-1/2 sm:w-3/4 w-full"
+    >
+      <div class="text-center">
+        <span
+          class="sm:text-lg text-base font-medium"
+          i18n="@@BasedOnInputsText1"
+          >{{ "BasedOnInputsText1" | translate }}
+        </span>
+        <span>{{ defaultFinancialCalculator.value.timeHorizon }}</span>
+        <span
+          class="sm:text-lg text-base font-medium"
+          i18n="@@BasedOnInputsText2"
+          >{{ "BasedOnInputsText2" | translate }}
+        </span>
+      </div>
+
+      <span
+        class="flex items-center border border-tertiary rounded-md p-1 px-2 sm:w-44"
+      >
+        <input
+          type="text"
+          id="expectedResultBasedOnInputs"
+          [value]="keepCodeFormatted(expectedResultBasedOnInputs)"
+          readonly
+          class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+        />
+        <span id="expectedResultBasedOnInputs" class="text-primary text-sm"
+          >$</span
+        >
+      </span>
+    </div>
+
+    <div class="flex justify-center items-center gap-4">
+      <app-button
+        [text]="constantService.textForReCalucate | translate"
+        [type]="'button'"
+        (click)="reCalculate()"
+        [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+        class="sm:w-auto w-full"
+      />
+      <app-button
+        [text]="
+          constantService.textForProceedToInvestmentStrategies | translate
+        "
+        [type]="'submit'"
+        (click)="skipOnSubmit($event)"
+        [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+        class="sm:w-auto w-full"
+      />
+    </div>
+  </div>
+  } }
+  <!--  -->
+  @else {
+  <div class="flex items-center gap-2 2xl:w-1/3 xl:w-1/2 sm:w-3/4 w-full my-2">
+    <span
+      class="lg:p-3 p-2 lg:px-5 px-4 text-white bg-tertiary lg:text-3xl text-lg font-extrabold rounded-[100%]"
+      [ngStyle]="{
+              'background-color': step === 1 || true ? '#e33133' : 'none',
+            }"
+      i18n="@@1"
+      >{{ "1" | translate }}</span
+    >
+    <hr
+      class="flex-grow w-full"
+      [ngStyle]="{
+              border:
+                step === 2 || step === 3
+                  ? '1px solid #e33133'
+                  : '1px solid #d3dcf4',
+            }"
+    />
+    <span
+      class="lg:p-3 p-2 lg:px-5 px-4 text-white lg:text-3xl text-lg font-extrabold rounded-[100%]"
+      [ngStyle]="{
+              'background-color': step === 2 || step === 3  ? '#e33133' : '#808aac',
+            }"
+      i18n="@@2"
+      >{{ "2" | translate }}</span
+    >
+    <hr
+      class="flex-grow w-full"
+      [ngStyle]="{
+              border:
+                step === 3
+                  ? '1px solid #e33133'
+                  : '1px solid #d3dcf4',
+            }"
+    />
+    <span
+      class="lg:p-3 p-2 lg:px-5 px-4 text-white lg:text-3xl text-lg font-extrabold rounded-[100%]"
+      [ngStyle]="{
+              'background-color': step === 3 ? '#e33133' : '#808aac',
+            }"
+      i18n="@@3"
+      >{{ "3" | translate }}</span
+    >
+  </div>
+  @if(step===1){
+  <form
+    [formGroup]="strategyFinancialCalculator"
+    (ngSubmit)="onSubmit($event)"
+    class="flex flex-col sm:justify-normal justify-between gap-4 items-center w-full h-full"
+  >
+    <div
+      class="flex flex-col gap-8 border border-primary p-4 rounded-md 2xl:w-1/3 xl:w-1/2 sm:w-3/4 w-full"
+    >
+      <div
+        class="flex sm:flex-row flex-col gap-4 w-full justify-between items-center"
+      >
+        <label
+          for="corpus"
+          class="sm:text-lg text-base font-medium"
+          i18n="@@CorpusText"
+          >{{ "CorpusText" | translate }}</label
+        >
+        <span
+          class="flex items-center border border-tertiary rounded-md p-1 px-2 sm:w-40 w-auto"
+        >
+          <input
+            #corpus
+            type="text"
+            formControlName="corpus"
+            (input)="corpus.value = keepCodeFormatted(corpus.value)"
+            id="corpus"
+            class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+          />
+          <span id="corpus" class="text-primary text-sm">$</span>
+        </span>
+      </div>
+      <div
+        class="flex sm:flex-row flex-col gap-4 w-full justify-between items-center"
+      >
+        <label
+          for="expectedInflation"
+          class="sm:text-lg text-base font-medium"
+          i18n="@@ExpectedInflation"
+          >{{ "ExpectedInflation" | translate }}</label
+        >
+        <span
+          class="flex items-center border border-tertiary rounded-md p-1 px-2 sm:w-40 w-auto"
+        >
+          <input
+            type="number"
+            formControlName="expectedInflation"
+            id="expectedInflation"
+            class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+          />
+          <span id="expectedInflation" class="text-primary text-sm">%</span>
+        </span>
+      </div>
+      <div
+        class="flex sm:flex-row flex-col gap-4 w-full justify-between items-center"
+      >
+        <label
+          for="timeHorizon"
+          class="sm:text-lg text-base font-medium"
+          i18n="@@TimeHorizon"
+          >{{ "TimeHorizon" | translate }}</label
+        >
+        <span
+          class="flex items-center border border-tertiary rounded-md p-1 px-2 sm:w-40 w-auto"
+        >
+          <input
+            type="text"
+            formControlName="timeHorizon"
+            id="timeHorizon"
+            class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+          />
+          <span id="timeHorizon" class="text-primary text-sm">years</span>
+        </span>
+      </div>
+      <h3
+        for="expectedFutureValue"
+        class="sm:text-xl text-lg font-bold"
+        i18n="@@ExpectedFutureValueText"
+      >
+        {{ "ExpectedFutureValueText" | translate }}
+      </h3>
+
+      <div
+        class="flex sm:flex-row flex-col gap-4 justify-between items-center w-full"
+      >
+        <label
+          for="timeHorizon"
+          class="sm:text-lg text-base font-medium"
+          i18n="@@CorpusAmount"
+          >{{ "CorpusAmount" | translate }}</label
+        >
+        <span
+          class="flex justify-center items-center border border-tertiary rounded-md p-1 px-2 sm:w-40 w-auto"
+        >
+          <input
+            type="text"
+            id="expectedFutureValue"
+            [value]="expectedFutureValue | currency : 'USD' : '' : '1.0-0'"
+            readonly
+            class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+          />
+          <span id="expectedFutureValue" class="text-primary text-sm">$</span>
+        </span>
+      </div>
+    </div>
+
+    <app-button
+      [text]="constantService.textForNext | translate"
+      [type]="'submit'"
+      [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+      class="sm:w-auto w-full"
+    />
+  </form>
+  } @else if(step===2) {
+  <form
+    [formGroup]="strategyFinancialCalculatorROI"
+    (ngSubmit)="onSubmit($event)"
+    class="flex flex-col gap-4 sm:justify-normal justify-between items-center w-full h-full"
+  >
+    <div
+      class="flex flex-col gap-8 border border-primary p-4 rounded-md 2xl:w-1/3 xl:w-1/2 sm:w-3/4 w-full"
+    >
+      <div
+        class="flex sm:flex-row flex-col gap-4 justify-between items-center w-full"
+      >
+        <label
+          for="initialInvestment"
+          class="sm:text-lg text-base font-medium"
+          i18n="@@InitialInvestmentText"
+          >{{ "InitialInvestmentText" | translate }}
+        </label>
+        <span
+          class="flex items-center border border-tertiary rounded-md p-1 px-2 sm:w-44"
+        >
+          <input
+            #initialInvestment
+            type="text"
+            formControlName="initialInvestment"
+            (input)="
+              initialInvestment.value = keepCodeFormatted(
+                initialInvestment.value
+              )
+            "
+            id="initialInvestment"
+            class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+          />
+          <span id="initialInvestment" class="text-primary text-sm">$</span>
+        </span>
+      </div>
+      <div
+        class="flex sm:flex-row flex-col gap-4 justify-between items-center w-full"
+      >
+        <label
+          for="monthlyInvestment"
+          class="sm:text-lg text-base font-medium"
+          i18n="@@MonthlyInvestmentText"
+          >{{ "MonthlyInvestmentText" | translate }}</label
+        >
+        <span
+          class="flex items-center border border-tertiary rounded-md p-1 px-2 sm:w-44"
+        >
+          <input
+            #monthlyInvestment
+            type="text"
+            formControlName="monthlyInvestment"
+            (input)="
+              monthlyInvestment.value = keepCodeFormatted(
+                monthlyInvestment.value
+              )
+            "
+            id="monthlyInvestment"
+            class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+          />
+          <span id="monthlyInvestment" class="text-primary text-sm">$</span>
+        </span>
+      </div>
+      <div
+        class="flex sm:flex-row flex-col gap-4 justify-between items-center w-full"
+      >
+        <label
+          for="expectedAnnualRateOfReturnPercentage"
+          class="sm:text-lg text-base font-medium"
+          i18n="@@ExpectedAnnualROIText"
+        >
+          {{ "ExpectedAnnualROIText" | translate }}
+        </label>
+        <span
+          class="flex items-center border border-tertiary rounded-md p-1 px-2 sm:w-44"
+        >
+          <input
+            type="text"
+            id="expectedAnnualRateOfReturnPercentage"
+            [value]="expectedAnnualRateOfReturnPercentage / 100 | percent"
+            readonly
+            class="text-sm font-normal h-8 focus:outline-none text-center w-full"
+          />
+        </span>
+      </div>
+
+      <h3
+        class="sm:text-lg text-base font-semibold p-2 text-center"
+        i18n="@@AnnaulText"
+      >
+        {{ "AnnaulText" | translate }}
+      </h3>
+    </div>
+
+    <div class="flex justify-between 2xl:w-1/3 xl:w-1/2 sm:w-3/4 w-full">
+      <app-button
+        [text]="constantService.textForBack | translate"
+        (click)="backStep()"
+        [type]="'button'"
+        [class]="
+          'border border-error rounded-md text-error sm:px-6 p-2 font-bold sm:w-auto w-full sm:block hidden'
+        "
+      />
+      <app-button
+        [text]="constantService.textForNext | translate"
+        [type]="'submit'"
+        [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+        class="sm:w-auto w-full"
+      />
+    </div>
+  </form>
+  } @else {
+  <div class="flex flex-col gap-4 items-center rounded-md sm:w-auto w-full p-4">
+    <div
+      class="flex sm:flex-row flex-col sm:justify-around gap-4 items-center rounded-md"
+    >
+      <div class="flex flex-col gap-4 items-center">
+        <h3
+          class="text-primary sm:text-xl text-lg sm:font-extrabold font-bold"
+          i18n="@@RiskProfileScore"
+        >
+          {{ "RiskProfileScore" | translate }}
+        </h3>
+        <div
+          class="flex flex-col items-center justify-between gap-4 lg:p-6 p-4 border border-tertiary rounded-md h-96 py-8 sm:md:w-72 w-64"
+        >
+          <h4
+            class="text-primary sm:text-base text-sm sm:font-extrabold font-bold"
+            i18n="@@YourRiskProfileScore"
+          >
+            {{ "YourRiskProfileScore" | translate }}
+          </h4>
+          <input
+            type="number"
+            name="riskProfile"
+            id="riskProfile"
+            [value]="riskProfileScore"
+            class="text-sm font-normal h-10 focus:outline-none text-center w-12 border border-tertiary rounded-md"
+            readonly
+          />
+          <p i18n="@@YouCanTolerate">
+            {{ "YouCanTolerate" | translate }}
+          </p>
+          @if(roiLowerLimit!=="" && roiUpperLimit!==""){
+          <span
+            class="bg-tertiary text-white rounded-md p-2 text-center sm:text-base text-sm"
+          >
+            {{ roiLowerLimit }}&nbsp;-&nbsp;{{ roiUpperLimit }}
+          </span>
+          }
+          <p i18n="@@DeviationInvestment">
+            {{ "DeviationInvestment" | translate }}
+          </p>
+        </div>
+      </div>
+      <div class="p-4">
+        @if(loaderService.getLoaderValue()){
+        <app-loader class="w-14 h-14" />
+        }@else {@if(strategyModelPorfolios){
+        <img
+          src="assets/icons/tickIcon1.svg"
+          alt="tick-icon"
+          i18n-alt="@@TickIcon"
+          width="50"
+        />
+        } @else{
+        <img
+          src="assets/icons/crossIcon.svg"
+          alt="cross-icon"
+          i18n-alt="@@CrossIcon"
+          width="50"
+        />
+        }}
+      </div>
+      <div class="flex flex-col gap-4 items-center">
+        <h3
+          class="text-primary sm:text-xl text-lg sm:font-extrabold font-bold"
+          i18n="@@FinancialCalcuatorResult"
+        >
+          {{ "FinancialCalcuatorResult" | translate }}
+        </h3>
+        <div
+          class="flex flex-col items-center justify-between gap-4 lg:p-6 p-4 border border-tertiary rounded-md h-96 py-8 md:w-72 w-64"
+        >
+          <h4
+            class="text-primary text-center sm:text-base text-sm sm:font-extrabold font-bold"
+            i18n="@@BasedOnInputs"
+          >
+            {{ "BasedOnInputs" | translate }}
+          </h4>
+          <span class="flex items-center border border-tertiary rounded-md p-1">
+            <input
+              type="text"
+              name="financialCalculatorResult"
+              id="financialCalculatorResult"
+              [value]="expectedAnnualRateOfReturnPercentage"
+              readonly
+              class="text-sm font-normal h-8 focus:outline-none text-center w-12"
+            />
+
+            <span
+              id="expectedAnnualRateOfReturnPercentage"
+              class="text-primary text-sm"
+              >%</span
+            >
+          </span>
+
+          <p class="text-center" i18n="@@Annual1">
+            {{ "Annual1" | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="flex w-full justify-between mt-4">
+      <app-button
+        [text]="constantService.textForBack | translate"
+        (click)="backStep()"
+        [type]="'button'"
+        [class]="
+          'rounded-md text-error sm:px-6 p-2 font-bold sm:w-auto w-full sm:block hidden'
+        "
+      />
+      @if(strategyModelPorfolios){
+      <app-button
+        [text]="
+          constantService.textForProceedToInvestmentStrategies | translate
+        "
+        [type]="'submit'"
+        (click)="proceedToInvestmentStrategies()"
+        [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+        class="sm:w-auto w-full"
+      />
+      } @else{
+      <app-button
+        [text]="constantService.textForReCalucate | translate"
+        [type]="'button'"
+        (click)="reCalculate()"
+        [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+        class="sm:w-auto w-full"
+      />
+      }
+    </div>
+  </div>
+  } }
+</div>

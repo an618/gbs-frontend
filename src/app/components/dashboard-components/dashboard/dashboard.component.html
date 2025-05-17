@@ -1,0 +1,151 @@
+@if(loaderService.getLoaderValue()){
+<div class="flex justify-center items-center h-96">
+  <app-loader class="w-14 h-14" />
+</div>
+} @else{ @if(dashboard.length > 0){
+<div class="p-4 flex flex-col w-full">
+  <div
+    class="w-full grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 p-4 border border-muted rounded-md"
+  >
+    @for (item of dashboard; track $index) {
+    <div
+      class="h-[34rem] flex flex-col justify-evenly items-center gap-4 border border-muted p-6 rounded-md"
+    >
+      <!-- Heading -->
+      <div>
+        <h2
+          class="w-full text-center sm:text-2xl text-base font-bold text-primary"
+        >
+          {{ item.goalName }}
+        </h2>
+        <h3 class="w-full text-center text-xs text-tertiary">
+          {{ item.riskProfile }}
+        </h3>
+      </div>
+      <!-- Current Balance-->
+      <div class="w-full flex justify-between px-4">
+        <div class="text-center text-xs font-bold">
+          <h4 class="text-primary">
+            {{ "CurrentBalance" | translate }}
+          </h4>
+          <p class="text-muted">{{ item.currentBalance | currency }}</p>
+        </div>
+        <div class="text-center text-xs font-bold">
+          <h4 class="">
+            {{ "GoalTarget" | translate }}
+          </h4>
+          <p class="text-muted">{{ item.goalTarget | currency }}</p>
+        </div>
+      </div>
+      <!-- Goal Progress -->
+      <div class="w-full flex items-end gap-2">
+        <div class="w-full flex flex-col gap-0.5">
+          <label for="goalProgress" class="text-xs font-bold text-muted"
+            >Goal Progress</label
+          >
+          <progress
+            id="goalProgress"
+            class="w-full h-1 flex-grow [&::-webkit-progress-bar]:rounded-xl [&::-webkit-progress-value]:rounded-xl rounded-xl [&::-webkit-progress-value]:bg-tertiary [&::-webkit-progress-bar]:bg-muted"
+            value="{{ item.progressPercent }}"
+            max="100"
+          ></progress>
+        </div>
+        <span class="text-xs font-bold text-tertiary">{{
+          item.progressPercent / 100 | percent
+        }}</span>
+      </div>
+      <!-- Two Block -->
+      <div class="w-11/12 flex justify-center gap-2">
+        <div class="w-[60%] border border-tertiary rounded-sm p-2">
+          <div
+            class="flex justify-around items-center sm:text-sm text-xs bg-[#ECECEC] p-1 rounded-md text-nowrap mb-2"
+          >
+            <span class="bg-white p-1 rounded-md">Timeline</span>
+            <span>5 Year, 3 Months</span>
+          </div>
+          <div class="flex justify-around items-center text-center gap-6">
+            <div>
+              <h3 class="text-xs">
+                {{ "MonthlyInvestment" | translate }}
+              </h3>
+              <p class="sm:text-sm text-xs text-secondary font-bold">
+                {{ item.monthlyInvestment | currency }}
+              </p>
+            </div>
+            <div>
+              <h3 class="text-xs">
+                {{ "InitialInvestment" | translate }}
+              </h3>
+              <p class="sm:text-sm text-xs text-secondary font-bold">
+                {{ item.initialInvestment | currency }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="w-[40%] flex justify-center items-center text-center border border-tertiary rounded-sm"
+        >
+          <div>
+            <h3 class="text-xs">
+              {{ "CurrentPortfolioReturn" | translate }}
+            </h3>
+            <p class="sm:text-sm text-xs text-secondary font-bold">
+              {{ item.currentPortfolioReturn / 100 | percent }}
+            </p>
+          </div>
+          <div>
+            <h3 class="text-xs">
+              {{ "ExpectedReturnInvestment" | translate }}
+            </h3>
+            <p class="sm:text-sm text-xs text-secondary font-bold">
+              {{ item.expectedReturnOnInvestment / 100 | percent }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- Assets Allocation -->
+      <div class="w-full">
+        <h3 class="font-bold">{{ "AssetsAllocation" | translate }}</h3>
+        <div class="w-full flex items-center">
+          @for (asset of item.assetAllocation | keyvalue; track $index) {
+          <div class="text-center w-full">
+            <label
+              [for]="'goalProgress' + $index"
+              class="text-xs text-nowrap"
+              >{{ asset.key }}</label
+            >
+            <progress
+              [id]="'goalProgress' + $index"
+              class="w-full flex-grow h-2 border border-[#E3E6F2] [&::-webkit-progress-bar]:rounded-sm [&::-webkit-progress-value]:rounded-sm rounded-sm [&::-webkit-progress-value]:bg-[#E3E6F2] [&::-webkit-progress-value]:bg-secondary"
+              value="{{ asset.value }}"
+              max="100"
+            ></progress>
+            <p class="text-xs">{{ asset.value / 100 | percent }}</p>
+          </div>
+          }
+        </div>
+      </div>
+      @if(item.currentPortfolioReturn < item.expectedReturnOnInvestment){
+      <p class="text-xs text-error">
+        You might need to increase your monthly contribution to reach your goal
+        on time.
+      </p>
+      }@else{
+      <p class="text-xs text-error m-1.5"></p>
+      }
+    </div>
+    }
+  </div>
+</div>
+}@else {
+<div class="flex flex-col justify-center gap-4 items-center h-[80dvh] min-h-96">
+  <div class="text-2xl font-bold">No goals set</div>
+  <app-button
+    (click)="sendToGoalSetting()"
+    [text]="constantService.textForAddGoal | translate"
+    [type]="'button'"
+    [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+    class="sm:w-auto w-full"
+  />
+</div>
+} }

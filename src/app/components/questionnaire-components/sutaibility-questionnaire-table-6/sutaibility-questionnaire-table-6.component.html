@@ -1,0 +1,102 @@
+<div class="overflow-auto border-quaternary">
+  <table class="w-full text-nowrap">
+    <thead class="text-sm font-normal bg-quinary border-2 border-quaternary">
+      <tr>
+        @for ( item of constantService.questionOption6TableHeading; track
+        item.id ) {
+        <th
+          [attr.colspan]="item.colspan"
+          class="text-tertiary text-center p-2 px-4 border-2 border-quaternary"
+        >
+          {{ item.heading | translate }}
+        </th>
+        }
+      </tr>
+      <tr>
+        @for ( item of constantService.questionOption6TableSubHeading; track
+        item.id ) {
+        <th
+          [attr.colspan]="item.colspan"
+          class="text-tertiary text-center p-2 px-4 whitespace-pre-line border-2 border-quaternary"
+        >
+          {{ item.heading | translate }}
+        </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for ( item of questionnairesOptions; track item.order ) {
+      <tr
+        class="sm:text-base text-center whitespace-pre-line text-primary border-2 border-quaternary"
+      >
+        <td
+          class="text-primary text-start font-bold p-2 px-4 border-2 border-quaternary text-nowrap"
+        >
+          {{ item.questionText }}
+        </td>
+        @for (experience of item.nestedQuestions; track experience.order) {
+        @if(experience.questionText==="Experience"){ @for (experienceSub of
+        experience.answers; track $index) {
+
+        <td class="text-primary border-2 border-quaternary w-24" colspan="2">
+          <input
+            type="radio"
+            [attr.aria-label]="sanitizeKey(item.questionText)"
+            name="Experience_{{ item.order }}"
+            accept="{{ experienceSub.questionId }}"
+            id="{{ experienceSub.answerId }}"
+            value="{{ experienceSub.answerText }}"
+            [checked]="
+              experienceSub.answerId ===
+              selectedAnswer(experienceSub.questionId)
+            "
+            (input)="setFieldValue($event)"
+            class="accent-error transform sm:scale-150 scale-100"
+          />
+        </td>
+        } }} @for (knowledge of item.nestedQuestions; track knowledge.order) {
+        @if(knowledge.questionText==="Knowledge"){ @for (knowledgeSub of
+        knowledge.answers; track $index) {
+
+        <td class="text-primary border-2 border-quaternary w-24" colspan="2">
+          <input
+            type="radio"
+            [attr.aria-label]="sanitizeKey(item.questionText)"
+            name="Knowledge_{{ item.order }}"
+            accept="{{ knowledgeSub.questionId }}"
+            id="{{ knowledgeSub.answerId }}"
+            value="{{ knowledgeSub.answerText }}"
+            [checked]="
+              knowledgeSub.answerId === selectedAnswer(knowledgeSub.questionId)
+            "
+            (input)="setFieldValue($event)"
+            class="accent-error transform sm:scale-150 scale-100"
+          />
+        </td>
+        } }} @for (understanding of item.nestedQuestions; track
+        understanding.order) {
+        <!--  -->
+        @if(understanding.questionText==="Understanding Of Product Risk"){ @for
+        (understandingSub of understanding.answers; track $index) {
+        <td class="text-primary border-2 border-quaternary" colspan="2">
+          <input
+            type="radio"
+            [attr.aria-label]="sanitizeKey(item.questionText)"
+            name="Understanding Of Product Risk_{{ item.order }}"
+            accept="{{ understandingSub.questionId }}"
+            id="{{ understandingSub.answerId }}"
+            value="{{ understandingSub.answerText }}"
+            [checked]="
+              understandingSub.answerId ===
+              selectedAnswer(understandingSub.questionId)
+            "
+            (input)="setFieldValue($event)"
+            class="accent-error transform sm:scale-150 scale-100"
+          />
+        </td>
+        } }}
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

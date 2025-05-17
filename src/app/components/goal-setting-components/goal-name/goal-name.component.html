@@ -1,0 +1,51 @@
+<form
+  (ngSubmit)="onSubmit($event)"
+  [formGroup]="goalNameForm"
+  class="w-full sm:h-[30rem] h-[90dvh] min-h-96 flex justify-center p-4"
+>
+  <div
+    class="xl:w-1/3 sm:w-1/2 w-full h-full flex flex-col sm:justify-around justify-between"
+  >
+    <div class="flex flex-col sm:justify-evenly gap-4 w-full">
+      <h3 class="text-sm font-bold text-lightRed" i18n="@@BeforeWeStart">
+        {{ "BeforeWeStart" | translate }}
+      </h3>
+      <label
+        for="goalName"
+        class="sm:text-xl text-lg font-extrabold text-primary"
+        i18n="@@GoalJourney"
+      >
+        {{ "GoalJourney" | translate }}
+      </label>
+      <input
+        type="text"
+        finanlSubmit
+        id="goalName"
+        formControlName="goalName"
+        class="border border-quaternary h-12 px-4 focus:outline-none rounded-md bg-white"
+        placeholder="{{ 'PleaseType' | translate }}"
+        i18n-placeholder="@@PleaseType"
+        autocomplete="on"
+      />
+    </div>
+    <div class="flex justify-between w-full">
+      <app-button
+        [text]="constantService.textForBack | translate"
+        [type]="'button'"
+        (click)="goBack()"
+        [class]="
+          'border border-error rounded-md sm:px-6 p-2 text-error font-bold sm:w-auto w-full sm:flex hidden'
+        "
+      />
+
+      <app-button
+        [text]="constantService.textForContiue | translate"
+        [type]="'submit'"
+        [class]="'bg-error sm:px-6 p-2 rounded-md text-white font-bold'"
+        class="sm:w-auto w-full"
+        [ngClass]="{ 'bg-tertiary': goalNameForm.invalid }"
+        [disabled]="goalNameForm.invalid"
+      />
+    </div>
+  </div>
+</form>

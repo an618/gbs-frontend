@@ -1,0 +1,57 @@
+<form
+  (submit)="onSubmit($event)"
+  class="w-full h-full flex flex-col sm:justify-around justify-between items-center gap-4 p-4"
+>
+  <div class="flex flex-col">
+    <div class="flex flex-col sm:justify-evenly sm:gap-8 gap-4">
+      <h3
+        class="text-primary sm:text-3xl text-lg font-extrabold sm:text-center"
+        i18n="@@ChooseYourGoal"
+      >
+        {{ "ChooseYourGoal" | translate }}
+      </h3>
+      <div type="button" class="grid sm:grid-cols-3 grid-cols-2 gap-4">
+        @for (item of GoalType; track item.goalTypeId) {
+        <div
+          class="relative border border-quaternary rounded-sm cursor-pointer"
+          [ngStyle]="{
+              'border-color':
+                selectGoal === item.goalName ? ' #e33133' : '#d3dcf4',
+            }"
+          (click)="setGoalType(item.goalName, item.goalTypeId)"
+        >
+          <app-goal-card
+            [title]="item.goalName"
+            [img]="item.imagePath"
+          ></app-goal-card>
+          <span
+            class="absolute sm:p-2 p-1 sm:py-2.5 py-1.5 bg-error rounded-sm top-0 right-0"
+            *ngIf="selectGoal === item.goalName"
+          >
+            <app-tick />
+          </span>
+        </div>
+        }
+      </div>
+      <br />
+    </div>
+    <div class="flex justify-between w-full">
+      <app-button
+        [text]="constantService.textForBack | translate"
+        [type]="'button'"
+        (click)="goBack()"
+        [class]="
+          'border border-error rounded-md text-error sm:px-6 p-2 font-bold sm:w-auto w-full sm:block hidden'
+        "
+      />
+      <app-button
+        [text]="constantService.textForContiue | translate"
+        [type]="'submit'"
+        [class]="'bg-error sm:px-6 p-2 rounded-md text-white font-bold'"
+        class="sm:w-auto w-full"
+        [ngClass]="{ 'bg-tertiary': !selectGoal }"
+        [disabled]="!selectGoal"
+      />
+    </div>
+  </div>
+</form>

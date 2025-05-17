@@ -1,0 +1,85 @@
+<nav
+  class="w-full flex justify-between items-center h-20 px-4 drop-shadow-sm fixed top-0 bg-white z-50"
+>
+  <div class="flex justify-between items-center md:w-1/2 w-full h-full">
+    <app-button [type]="'button'" routerLink="/dashboard" class="flex">
+      <img
+        src="assets/images/bankLogo.svg"
+        alt="bank-icon"
+        i18n-alt="@@BankIcon"
+        (click)="confirmNavigation($event, 'dashboard')"
+      />
+    </app-button>
+    <menu class="flex gap-4 text-tertiary font-bold h-full items-center">
+      @for (item of constantService.overviewMenu; track item.id) {
+      <li
+        class="xl:px-4 px-2 flex items-center h-full cursor-pointer"
+        [ngClass]="{
+          'text-error bg-[#EBF2F9] border-b-4 border-b-error rounded-none':
+            route === item.link
+        }"
+        (click)="confirmNavigation($event, item.link)"
+      >
+        {{ item.name | translate }}
+      </li>
+      }
+    </menu>
+  </div>
+  <div class="md:flex hidden justify-end items-center gap-2 w-1/2">
+    <div
+      class="flex justify-end items-center gap-2 p-2 border border-tertiary rounded-full"
+    >
+      <span>
+        <img
+          src="assets/icons/languageIcon.svg"
+          alt="language-icon"
+          i18n-alt="@@LanguageIcon"
+        />
+      </span>
+      <select
+        id="language"
+        class="bg-transparent text-tertiary focus:outline-none font-bold"
+        (change)="changeLanguage($event)"
+      >
+        @for (item of constantService.languageMenu; track item.id) {
+        <option [value]="item.link" [selected]="selectedLanguage === item.link">
+          {{ item.name | translate }}
+        </option>
+        }
+      </select>
+    </div>
+
+    <app-button
+      [class]="'flex items-center p-2'"
+      [type]="'button'"
+      (click)="logout()"
+      ><img
+        src="assets/icons/logoutIcon.svg"
+        alt="user-icon"
+        i18n-alt="@@LogoutIcon"
+    /></app-button>
+  </div>
+</nav>
+
+<div
+  class="fixed top-2 right-2 bg-quaternary p-4 border-primary rounded-lg z-50"
+  [ngStyle]="{ display: show ? 'block' : 'none' }"
+>
+  <h3 class="text-primary pb-4">
+    Are you sure you want to quit? Changes will be saved.
+  </h3>
+  <div class="flex justify-end items-center gap-4">
+    <app-button
+      [type]="'button'"
+      [class]="'bg-lightBlue text-white p-1 px-4 rounded-xl'"
+      [text]="'No'"
+      (click)="setNavigation(false)"
+    />
+    <app-button
+      [type]="'button'"
+      [class]="'bg-lightBlue text-white p-1 px-4 rounded-xl'"
+      [text]="'Yes'"
+      (click)="setNavigation(true)"
+    />
+  </div>
+</div>

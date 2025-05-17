@@ -1,0 +1,120 @@
+@if(loaderService.getLoaderValue()){
+<div class="flex justify-center items-center h-96 w-full">
+  <app-loader class="h-12 w-12" />
+</div>
+
+}@else {@if(!questionnaireSkip){
+<!--  -->
+@if(strategyModelPorfolio.length === 1){
+<div class="flex flex-col justify-center items-center w-full">
+  <div class="lg:w-3/4 sm:w-11/12 w-full">
+    <app-model-porfolio [strategyModelPorfolio]="strategyModelPorfolio[0]" />
+    <div class="w-full sm:flex justify-center mt-8">
+      <app-button
+        (click)="proceed()"
+        [text]="constantService.textForProceed | translate"
+        [type]="'button'"
+        [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+        class="sm:w-auto w-full"
+      />
+    </div>
+  </div>
+</div>
+} @else {
+<div class="w-full h-full flex flex-col items-center justify-between">
+  <div class="p-2 flex flex-col items-center lg:w-3/4 sm:w-11/12 w-full">
+    <h2
+      class="sm:text-2xl text-xl sm:font-bold font-bold w-full my-2"
+      i18n="@@StrategyDescription1"
+    >
+      {{ "StrategyDescription1" | translate }}
+    </h2>
+    <h3
+      class="sm:text-base text-sm sm:font-medium font-bold w-full my-2"
+      i18n="@@StrategyDescription2"
+    >
+      {{ "StrategyDescription2" | translate }}
+    </h3>
+    <h4
+      class="font-bold my-2 w-full flex flex-col gap-4"
+      i18n="@@StrategyDescription3"
+    >
+      {{ "StrategyDescription3" | translate }}
+    </h4>
+  </div>
+
+  <div class="overflow-auto 2xl:w-1/3 lg:w-1/2 sm:w-3/4 w-full h-96">
+    <table class="w-full">
+      <thead
+        class="text-sm font-normal bg-quinary border border-quaternary text-primary text-center"
+      >
+        @for (item of constantService.strategyListing; track item.id) {
+        <th class="p-2 py-3">
+          {{ item.heading | translate }}
+        </th>
+        }
+      </thead>
+      <tbody class="w-full sm:text-base text-primary text-center text-base">
+        @for (item of strategyModelPorfolio; track $index) {
+        <tr>
+          <td class="p-2 border border-quaternary">
+            {{ $index + 1 }}
+          </td>
+          <td class="p-2 border border-quaternary">
+            {{ item.name }}
+          </td>
+          <td class="p-2 border border-quaternary">
+            {{ item.riskProfile }}
+          </td>
+          <td class="p-2 border border-quaternary">
+            <button
+              class="p-2 bg-quaternary rounded-md px-4"
+              (click)="setShowModelPortfolio(item.strategyId)"
+            >
+              {{ "View" | translate }}
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <app-pagination
+    [pagination]="pagination"
+    [pageSize]="pageSize"
+    [page]="page"
+    [pageSizes]="pageSizes"
+    (pageSizeChange)="setPageSize($event)"
+    (incrementPage)="setIncrementPage()"
+    (decrementPage)="setDecrementPage()"
+  />
+
+  <app-button
+    [text]="constantService.textForBack | translate"
+    [type]="'button'"
+    (click)="goBack()"
+    [class]="
+      'border border-error rounded-md sm:px-6 p-2 text-error font-bold sm:w-auto w-full sm:flex hidden my-4'
+    "
+  />
+
+  <h3
+    class="sm:text-base text-sm sm:font-medium font-bold lg:w-3/4 sm:w-11/12 w-full my-4"
+  ></h3>
+</div>
+} } @else {
+<div class="flex flex-col justify-center items-center w-full">
+  <div class="lg:w-3/4 sm:w-11/12 w-full">
+    <app-model-porfolio [strategyModelPorfolio]="strategyModelPorfolio[0]" />
+    <div class="w-full sm:flex justify-center mt-8">
+      <app-button
+        (click)="proceed()"
+        [text]="constantService.textForProceed | translate"
+        [type]="'button'"
+        [class]="'bg-error text-base font-bold text-white rounded-md p-2 px-6'"
+        class="sm:w-auto w-full"
+      />
+    </div>
+  </div>
+</div>
+}}

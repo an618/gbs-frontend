@@ -1,0 +1,110 @@
+<div class="overflow-auto border-quaternary my-2">
+  <table class="w-full">
+    <thead class="text-sm font-normal bg-quinary border border-quaternary">
+      <tr>
+        @for (item of questionnairesOptions; track item.order) {
+        <th class="text-primary text-start p-2 py-3">
+          {{ item.questionText }}
+        </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="sm:text-base text-primary text-center">
+        @for (item of questionnairesOptions; track item.order) { @if(item.order
+        ===1){
+        <td class="text-primary font-bold p-2 border border-quaternary">
+          {{ $index + 1 }}
+        </td>
+        } @else if(item.order === 5){
+        <td class="text-primary font-bold p-2 border border-quaternary">
+          <select
+            id="{{ item.questionId + '_table1' }}"
+            name="{{ sanitizeKey(item.questionText) }}"
+            (input)="setFieldValue($event)"
+            class="h-10 p-2 border border-quaternary rounded-md focus:outline-none w-auto bg-white text-sm font-normal"
+            autocomplete="on"
+          >
+            <option value="" disabled selected i18n="@@MaritalStatus">
+              {{ "MaritalStatus" | translate }}
+            </option>
+            @for (subItem of item.answers; track $index ) {
+            <option
+              value="{{ subItem.answerText }}"
+              [selected]="
+                subItem.answerText ===
+                selectedAnswerDropdown(item.questionId + '_table1')
+              "
+            >
+              {{ subItem.answerText }}
+            </option>
+            }
+          </select>
+        </td>
+        } @else {
+        <td class="text-primary font-bold p-2 border border-quaternary">
+          <input
+            accept="{{ item.questionId + '_table1' }}"
+            [type]="getInputType(item.questionText)"
+            name="{{ sanitizeKey(item.questionText) }}"
+            [value]="selectedAnswer(item.questionId + '_table1')"
+            (input)="setFieldValue($event)"
+            placeholder="Please type"
+            class="text-sm font-normal h-10 px-4 border border-quaternary rounded-md focus:outline-none lg:w-full w-auto"
+            autocomplete="on"
+          />
+        </td>
+        } }
+      </tr>
+      @if(type==="Joint"){
+      <tr class="sm:text-base text-primary text-center">
+        @for (item of questionnairesOptions; track item.order) { @if(item.order
+        ===1){
+        <td class="text-primary font-bold p-2 border border-quaternary">
+          {{ $index + 2 }}
+        </td>
+        } @else if(item.order === 5){
+        <td class="text-primary font-bold p-2 border border-quaternary">
+          <select
+            id="{{ item.questionId + '_table2' }}"
+            name="{{ sanitizeKey(item.questionText) }}"
+            (input)="setFieldValue($event)"
+            placeholder="Please type"
+            class="h-10 p-2 border border-quaternary rounded-md focus:outline-none w-auto bg-white text-sm font-normal"
+            autocomplete="on"
+          >
+            <option value="" disabled selected i18n="@@MaritalStatus">
+              {{ "MaritalStatus" | translate }}
+            </option>
+            @for (subItem of item.answers; track $index ) {
+            <option
+              value="{{ subItem.answerText }}"
+              [selected]="
+                subItem.answerText ===
+                selectedAnswerDropdown(item.questionId + '_table2')
+              "
+            >
+              {{ subItem.answerText }}
+            </option>
+            }
+          </select>
+        </td>
+        } @else {
+        <td class="text-primary font-bold p-2 border border-quaternary">
+          <input
+            accept="{{ item.questionId + '_table2' }}"
+            [type]="getInputType(item.questionText)"
+            name="{{ sanitizeKey(item.questionText) }}"
+            (input)="setFieldValue($event)"
+            [value]="selectedAnswer(item.questionId + '_table2')"
+            placeholder="Please type"
+            class="text-sm font-normal h-10 px-4 border border-quaternary rounded-md focus:outline-none w-auto"
+            autocomplete="on"
+          />
+        </td>
+        } }
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
